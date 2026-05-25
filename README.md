@@ -1,5 +1,10 @@
 # Ship8 — PHP SDK
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![PHP](https://img.shields.io/badge/PHP-7.4%20%7C%208.x-777BB4.svg)](https://www.php.net/)
+[![CI](https://github.com/be-lenka/ship8-php-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/be-lenka/ship8-php-sdk/actions/workflows/ci.yml)
+[![Code Style: PSR-12](https://img.shields.io/badge/Code%20Style-PSR--12-brightgreen.svg)](https://www.php-fig.org/psr/psr-12/)
+
 PHP client for the [Ship8](https://ship8.com) fulfillment / 3PL platform.
 Provides typed models, JWT authentication and Guzzle-based transport so you
 can integrate orders, shipments, inbound POs, receiving, releases, products,
@@ -13,9 +18,10 @@ inventory, invoices and freight quotes from any PHP application.
 
 ### Requirements
 
-- PHP 7.4 or later (works on PHP 8.x)
+- PHP 7.4 or later (CI runs against 7.4, 8.0, 8.1, 8.2 and 8.3)
+- Composer 2.x
 - ext-curl, ext-json, ext-mbstring
-- Guzzle 6.2+ or 7.x
+- Guzzle 6.2+ or 7.x (pulled in transitively via Composer)
 
 ### Composer
 
