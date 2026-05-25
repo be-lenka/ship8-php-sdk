@@ -1,0 +1,3817 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Ship8 API",
+        "description": "\n# Environment\n\nShip8 domain for each environment list as below. \n-  Production：portal.ship8.com\n- Sandbox：sandbox.ship8.com\n\nAPI endpoint format:  https://{domain}/{apiPath}\n# Authentication\n\nShip8 offers custom simplified JWT authentication: <br>Use your Ship8 account name and password to get an access token before visiting the business API. <br>Make sure your token is not expired. A new access token can be obtained by refreshing the token through the API before it expires.  \n- Request Token: See details in the Request Token API under Account Category.   \n- Refresh Token:  See details in the Refresh Token API under Account Category.\n\n<SecurityDefinitions />\n",
+        "version": "Public"
+    },
+    "paths": {
+        "/api/app/account/requestToken": {
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Request Token",
+                "description": "Obtain token based on user account",
+                "requestBody": {
+                    "description": "User Account",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Account.UserLoginDto"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[Account.JwtTokenResultDto]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/app/account/refreshToken": {
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Refresh Token",
+                "description": "Obtain new useable access token by old access token and refresh token",
+                "requestBody": {
+                    "description": "Token information",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Account.JwtTokenRefreshRequestDto"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[Account.JwtTokenResultDto]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/app/company/getBondedDCCompany": {
+            "get": {
+                "tags": [
+                    "Company"
+                ],
+                "summary": "Get BondedDC Company",
+                "parameters": [
+                    {
+                        "name": "CompanyCode",
+                        "in": "query",
+                        "description": "CompanyCode",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/app/customerFreightQuote/getEstimatedShippingCost": {
+            "post": {
+                "tags": [
+                    "CustomerFreightQuote"
+                ],
+                "summary": "EstimatedShippingCost",
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Order.Dtos.EstimatedShippingCostDto"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[Order.Dtos.EstimatedShippingCostResultDto]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/app/inboundPO/create": {
+            "post": {
+                "tags": [
+                    "InboundPO"
+                ],
+                "summary": "Create Inbound PO",
+                "description": "Create Inbound PO API",
+                "requestBody": {
+                    "description": "LogisticsPortal.Application.Contracts.InboundPOs.InboundPOCreationDto",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/InboundPOs.InboundPOCreationDto"
+                                    }
+                                ],
+                                "description": "Create Inbound PO By API"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[InboundPOs.InboundPOOutDto]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/app/inboundPO/createEECBondedDC": {
+            "post": {
+                "tags": [
+                    "InboundPO"
+                ],
+                "summary": "Create eec Inbound PO",
+                "requestBody": {
+                    "description": "LogisticsPortal.Application.Contracts.InboundPOs.InboundPOCreationDto",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/InboundPOs.InboundPOCreationDto"
+                                    }
+                                ],
+                                "description": "Create Inbound PO By API"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[InboundPOs.InboundPOOutDto]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/app/invoice/list": {
+            "get": {
+                "tags": [
+                    "Invoice"
+                ],
+                "summary": "Get Invoice Information",
+                "parameters": [
+                    {
+                        "name": "CustomerCode",
+                        "in": "query",
+                        "description": "Customer Code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "InvoiceDateStart",
+                        "in": "query",
+                        "description": "Invoice Date Start",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "InvoiceDateEnd",
+                        "in": "query",
+                        "description": "Invoice Date End",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "InvoiceCategory",
+                        "in": "query",
+                        "description": "Invoice Category",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[List[Invoice.Dtos.InvoiceOutDto]]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/app/order/create": {
+            "post": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Create Order",
+                "description": "Create Order API",
+                "requestBody": {
+                    "description": "LogisticsPortal.Application.Contracts.Order.Dtos.OrderCreationDto",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Order.Dtos.OrderCreationDto"
+                                    }
+                                ],
+                                "description": "Create Order By API"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[Order.Dtos.OrderOutDto]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/app/order/get": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Get order info",
+                "parameters": [
+                    {
+                        "name": "customerCode",
+                        "in": "query",
+                        "description": "customerCode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "orderNo",
+                        "in": "query",
+                        "description": "orderNo",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[Order.Dtos.OrderOutDto]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/app/product/getInventory": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get Product Inventory List",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[Products.Dtos.InventoryDto]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/app/product/upsert": {
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Create or Update Product API",
+                "requestBody": {
+                    "description": "LogisticsPortal.Application.Contracts.Products.Dtos.ProductCreationDto",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Products.Dtos.ProductCreationDto"
+                                    }
+                                ],
+                                "description": "Product Creation Dto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[Products.Dtos.ProductCreationOutDto]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/app/receiving/create": {
+            "post": {
+                "tags": [
+                    "Receiving"
+                ],
+                "summary": "Create Receiving Order",
+                "description": "Create Receiving Order API",
+                "requestBody": {
+                    "description": "LogisticsPortal.Application.Contracts.Receivings.Dtos.ReceivingCreationDto",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Receivings.Dtos.ReceivingCreationDto"
+                                    }
+                                ],
+                                "description": "Create Receiving Order By API"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[Receivings.Dtos.ReceivingOutDto]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/app/releaseSO/create": {
+            "post": {
+                "tags": [
+                    "ReleaseSO"
+                ],
+                "summary": "Create Release SO",
+                "description": "Create Release SO API",
+                "requestBody": {
+                    "description": "LogisticsPortal.Application.Contracts.ReleaseSOs.API.ReleaseSOCreationDto",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/ReleaseSOs.API.ReleaseSOCreationDto"
+                                    }
+                                ],
+                                "description": "Create Release SO By API"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[ReleaseSOs.API.ReleaseSOOutDto]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/app/shipment/get": {
+            "get": {
+                "tags": [
+                    "Shipment"
+                ],
+                "summary": "Get Shipments",
+                "description": "Get order related shipments Info API",
+                "parameters": [
+                    {
+                        "name": "CustomerCode",
+                        "in": "query",
+                        "description": "Customer Code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CustomerOrderNo",
+                        "in": "query",
+                        "description": "Order No",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDto[List[Order.Shipment.Dtos.ShipmentDto]]"
+                                }
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type"
+                    },
+                    "429": {
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "JwtBearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Account.JwtRefreshTokenDto": {
+                "type": "object",
+                "properties": {
+                    "userName": {
+                        "type": "string",
+                        "description": "User Name (Email)",
+                        "nullable": true
+                    },
+                    "tokenString": {
+                        "type": "string",
+                        "description": "Refresh Token String, It is required in Refresh Token API when an access token is expired.",
+                        "nullable": true
+                    },
+                    "expireAt": {
+                        "type": "string",
+                        "description": "Refresh Token Expire At",
+                        "format": "date-time"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Refresh Token Data Structure"
+            },
+            "Account.JwtTokenRefreshRequestDto": {
+                "required": [
+                    "accessToken",
+                    "refreshToken"
+                ],
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Old Access Token which issued by Request Token API"
+                    },
+                    "refreshToken": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "A valid Refresh Token which issued by Request Token API"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Account.JwtTokenResultDto": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string",
+                        "description": "Access Token, required when access business API",
+                        "nullable": true
+                    },
+                    "accessTokenExpireAt": {
+                        "type": "string",
+                        "description": "Access Token Expire At",
+                        "format": "date-time"
+                    },
+                    "refreshToken": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Account.JwtRefreshTokenDto"
+                            }
+                        ],
+                        "description": "Refresh Token Data Structure",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Account.UserLoginDto": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "User Email"
+                    },
+                    "password": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "User Password"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Enum.BasicBool": {
+                "enum": [
+                    "No",
+                    "Yes"
+                ],
+                "type": "String",
+                "format": "String"
+            },
+            "Enum.ContainerType": {
+                "enum": [
+                    "LTL",
+                    "SmallParcel",
+                    "Container",
+                    "PalletizedFreight"
+                ],
+                "type": "String",
+                "format": "String"
+            },
+            "Enum.ProductChangeType": {
+                "enum": [
+                    "New",
+                    "Change"
+                ],
+                "type": "String",
+                "format": "String"
+            },
+            "Enum.ProductStatus": {
+                "enum": [
+                    "Pending",
+                    "Active",
+                    "Disabled"
+                ],
+                "type": "String",
+                "format": "String"
+            },
+            "Enum.ProductType": {
+                "enum": [
+                    "Standard",
+                    "Assortment",
+                    "Kit"
+                ],
+                "type": "String",
+                "format": "String"
+            },
+            "Enum.ShipToLevel": {
+                "enum": [
+                    "Customer",
+                    "Store",
+                    "DC"
+                ],
+                "type": "String",
+                "format": "String"
+            },
+            "Enum.SignatureType": {
+                "enum": [
+                    "SignatureRq",
+                    "AdultSignatureRq",
+                    "IndirectSignatureRq"
+                ],
+                "type": "String",
+                "format": "String"
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ExceptionResponse"
+                            }
+                        ],
+                        "nullable": true,
+                        "readOnly": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "ExceptionResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "details": {
+                        "type": "string",
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "data": {
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "validationErrors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationErrorResponse"
+                        },
+                        "nullable": true,
+                        "readOnly": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "InboundPOs.InboundPOCreationDto": {
+                "required": [
+                    "bolNo",
+                    "carrierSCAC",
+                    "containerNo",
+                    "customerCode",
+                    "inboundPO",
+                    "orderItems",
+                    "sealNo",
+                    "shipDate",
+                    "shipToCode"
+                ],
+                "type": "object",
+                "properties": {
+                    "eecShipmentID": {
+                        "type": "string",
+                        "description": "Used this to link EEC Shipment with Inbound PO",
+                        "nullable": true
+                    },
+                    "customerCode": {
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Customer Code"
+                    },
+                    "inboundPO": {
+                        "maxLength": 50,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Inbound PO No."
+                    },
+                    "entranceDocumentID": {
+                        "maxLength": 100,
+                        "type": "string",
+                        "description": "Entrance Document ID",
+                        "nullable": true
+                    },
+                    "containerNo": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Container No."
+                    },
+                    "carrierSCAC": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Carrier SCAC"
+                    },
+                    "bolNo": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "BOL No."
+                    },
+                    "shipToCode": {
+                        "maxLength": 3,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To Code"
+                    },
+                    "shipDate": {
+                        "type": "string",
+                        "description": "Ship Date",
+                        "format": "date-time"
+                    },
+                    "sealNo": {
+                        "maxLength": 50,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Seal No."
+                    },
+                    "comment": {
+                        "maxLength": 500,
+                        "type": "string",
+                        "description": "Comment",
+                        "nullable": true
+                    },
+                    "userEmail": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "eecMasterPO_ID": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "orderItems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InboundPOs.InboundPOItemCreationDto"
+                        },
+                        "description": "Order Item"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Create Inbound PO By API"
+            },
+            "InboundPOs.InboundPOItemCreationDto": {
+                "required": [
+                    "itemNo",
+                    "itemQty",
+                    "itemUPC"
+                ],
+                "type": "object",
+                "properties": {
+                    "itemNo": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Item No."
+                    },
+                    "itemUPC": {
+                        "maxLength": 16,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "UPC Code"
+                    },
+                    "itemQty": {
+                        "maximum": 999999,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Item Qty",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "InboundPOs.InboundPOLineItemOutDto": {
+                "type": "object",
+                "properties": {
+                    "lineNo": {
+                        "type": "integer",
+                        "description": "Line No.",
+                        "format": "int32"
+                    },
+                    "sku": {
+                        "type": "string",
+                        "description": "Product SKU",
+                        "nullable": true
+                    },
+                    "upc": {
+                        "type": "string",
+                        "description": "Item UPC",
+                        "nullable": true
+                    },
+                    "productDesc": {
+                        "type": "string",
+                        "description": "Product Description",
+                        "nullable": true
+                    },
+                    "casePack": {
+                        "type": "number",
+                        "description": "Case Pack",
+                        "format": "double"
+                    },
+                    "qtyOrdered": {
+                        "type": "number",
+                        "description": "Quantity Ordered",
+                        "format": "double"
+                    },
+                    "qtyReceived": {
+                        "type": "number",
+                        "description": "Quantity Received",
+                        "format": "double"
+                    },
+                    "qtyVariance": {
+                        "type": "number",
+                        "description": "Variance",
+                        "format": "double",
+                        "readOnly": true
+                    },
+                    "lineStatus": {
+                        "type": "string",
+                        "description": "Line Item Status",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "InboundPOs.InboundPOOutDto": {
+                "type": "object",
+                "properties": {
+                    "customerCode": {
+                        "type": "string",
+                        "description": "Customer Code",
+                        "nullable": true
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "Order ID",
+                        "format": "uuid"
+                    },
+                    "inboundPO": {
+                        "type": "string",
+                        "description": "Inbound PO No.",
+                        "nullable": true
+                    },
+                    "entranceDocumentID": {
+                        "type": "string",
+                        "description": "Entrance Document ID",
+                        "nullable": true
+                    },
+                    "containerNo": {
+                        "type": "string",
+                        "description": "Container No.",
+                        "nullable": true
+                    },
+                    "carrier": {
+                        "type": "string",
+                        "description": "Carrier",
+                        "nullable": true
+                    },
+                    "carrierSCAC": {
+                        "type": "string",
+                        "description": "Carrier SCAC",
+                        "nullable": true
+                    },
+                    "bolNo": {
+                        "type": "string",
+                        "description": "BOL No.",
+                        "nullable": true
+                    },
+                    "shipToCode": {
+                        "type": "string",
+                        "description": "Ship To",
+                        "nullable": true
+                    },
+                    "shipDate": {
+                        "type": "string",
+                        "description": "Ship Date",
+                        "format": "date-time"
+                    },
+                    "sealNo": {
+                        "type": "string",
+                        "description": "Seal No.",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Order Status",
+                        "nullable": true
+                    },
+                    "comment": {
+                        "type": "string",
+                        "description": "Comment",
+                        "nullable": true
+                    },
+                    "orderItems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InboundPOs.InboundPOLineItemOutDto"
+                        },
+                        "description": "Order Item",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Invoice.Dtos.IncoiveChargeTypeDto": {
+                "type": "object",
+                "properties": {
+                    "chargeType": {
+                        "type": "string",
+                        "description": "Charge Type",
+                        "nullable": true
+                    },
+                    "referenceID": {
+                        "type": "string",
+                        "description": "Reference ID",
+                        "nullable": true
+                    },
+                    "transactionCount": {
+                        "type": "number",
+                        "description": "Transaction Count",
+                        "format": "double"
+                    },
+                    "unitPrice": {
+                        "type": "number",
+                        "description": "Unit Price",
+                        "format": "double"
+                    },
+                    "totalAmount": {
+                        "type": "number",
+                        "description": "Total Amount",
+                        "format": "double"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Invoice Charge Type Amount"
+            },
+            "Invoice.Dtos.InvoiceOutDto": {
+                "type": "object",
+                "properties": {
+                    "invoiceID": {
+                        "type": "string",
+                        "description": "Invoice ID",
+                        "nullable": true
+                    },
+                    "invoiceDate": {
+                        "type": "string",
+                        "description": "Invoice Date",
+                        "format": "date-time"
+                    },
+                    "invoiceCategory": {
+                        "type": "string",
+                        "description": "Invoice Category",
+                        "nullable": true
+                    },
+                    "invoiceAmount": {
+                        "type": "number",
+                        "description": "Invoice Amount",
+                        "format": "double"
+                    },
+                    "incoiveChargeTypes": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Invoice.Dtos.IncoiveChargeTypeDto"
+                        },
+                        "description": "Incoive Charge Type Amount",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Invoice Info"
+            },
+            "Order.Dtos.EstimatedShippingCostDto": {
+                "required": [
+                    "customerCode",
+                    "salesOrderNo"
+                ],
+                "type": "object",
+                "properties": {
+                    "customerCode": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "salesOrderNo": {
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "loc": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Order.Dtos.EstimatedShippingCostItemDto": {
+                "type": "object",
+                "properties": {
+                    "isFullCase": {
+                        "type": "boolean"
+                    },
+                    "casePack": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalCtn": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "cartonSize": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "cartonCube": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "cartonWeight": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "cartonRate": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "totalRate": {
+                        "type": "number",
+                        "format": "double"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Order.Dtos.EstimatedShippingCostResultDto": {
+                "type": "object",
+                "properties": {
+                    "salesOrderNo": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "shipMethod": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "fromAddress": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "toAddress": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "totalCost": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "itemDetail": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Order.Dtos.EstimatedShippingCostItemDto"
+                        },
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "Order.Dtos.OrderCreationDto": {
+                "required": [
+                    "carrierSCACCode",
+                    "crossDocking",
+                    "customerCode",
+                    "customerOrderDate",
+                    "customerOrderNo",
+                    "orderItems",
+                    "shipToAddressLine1",
+                    "shipToCity",
+                    "shipToCountry",
+                    "shipToCustomerName",
+                    "shipToLevel",
+                    "shipToState",
+                    "shipToZipCode"
+                ],
+                "type": "object",
+                "properties": {
+                    "customerCode": {
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Customer Code"
+                    },
+                    "customerOrderNo": {
+                        "maxLength": 22,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Customer Order No."
+                    },
+                    "customerRetailOrderNo": {
+                        "maxLength": 30,
+                        "type": "string",
+                        "description": "Customer Retail Order No.",
+                        "nullable": true
+                    },
+                    "customerOrderDate": {
+                        "type": "string",
+                        "description": "Customer Order Date",
+                        "format": "date-time"
+                    },
+                    "requestShipDate": {
+                        "type": "string",
+                        "description": "Request Ship Date",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "cancelDate": {
+                        "type": "string",
+                        "description": "Cancel Date",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "carrierSCACCode": {
+                        "maxLength": 50,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Carrier SCAC Code"
+                    },
+                    "crossDocking": {
+                        "type": "boolean",
+                        "description": "Cross Docking"
+                    },
+                    "shipToLevel": {
+                        "enum": [
+                            "Customer",
+                            "Store",
+                            "DC"
+                        ],
+                        "type": "String",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Enum.ShipToLevel"
+                            }
+                        ],
+                        "description": "Ship To Level",
+                        "format": "String"
+                    },
+                    "businessLine": {
+                        "maxLength": 100,
+                        "type": "string",
+                        "description": "Business Line Name",
+                        "nullable": true
+                    },
+                    "shipToCustomerName": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To Customer Name"
+                    },
+                    "shipToCompany": {
+                        "type": "string",
+                        "description": "Ship To Company",
+                        "nullable": true
+                    },
+                    "shipToAddressLine1": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To AddressLine1"
+                    },
+                    "shipToAddressLine2": {
+                        "type": "string",
+                        "description": "Ship To AddressLine2",
+                        "nullable": true
+                    },
+                    "shipToCity": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To City"
+                    },
+                    "shipToState": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To State"
+                    },
+                    "shipToZipCode": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To ZipCode"
+                    },
+                    "shipToCountry": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To Country\r\nCountry Code Example:US or CN"
+                    },
+                    "shipToPhone": {
+                        "type": "string",
+                        "description": "Ship To Phone",
+                        "nullable": true
+                    },
+                    "shipToEmail": {
+                        "type": "string",
+                        "description": "Ship To Email",
+                        "nullable": true
+                    },
+                    "billToCustomerName": {
+                        "type": "string",
+                        "description": "Bill To Customer Name",
+                        "nullable": true
+                    },
+                    "billToCompany": {
+                        "type": "string",
+                        "description": "Bill To Company",
+                        "nullable": true
+                    },
+                    "billToAddressLine1": {
+                        "type": "string",
+                        "description": "Bill To AddressLine1",
+                        "nullable": true
+                    },
+                    "billToAddressLine2": {
+                        "type": "string",
+                        "description": "Bill To AddressLine2",
+                        "nullable": true
+                    },
+                    "billToCity": {
+                        "type": "string",
+                        "description": "Bill To City",
+                        "nullable": true
+                    },
+                    "billToState": {
+                        "type": "string",
+                        "description": "Bill To State",
+                        "nullable": true
+                    },
+                    "billToZipCode": {
+                        "type": "string",
+                        "description": "Bill To ZipCode",
+                        "nullable": true
+                    },
+                    "billToCountry": {
+                        "type": "string",
+                        "description": "Bill To Country\r\nCountry Code Example:US or CN",
+                        "nullable": true
+                    },
+                    "billToPhone": {
+                        "type": "string",
+                        "description": "Bill To Phone",
+                        "nullable": true
+                    },
+                    "billToEmail": {
+                        "type": "string",
+                        "description": "Bill To Email",
+                        "nullable": true
+                    },
+                    "thirdPartyAccount": {
+                        "maxLength": 50,
+                        "type": "string",
+                        "description": "Third Party Account",
+                        "nullable": true
+                    },
+                    "thirdPartyPostal": {
+                        "maxLength": 50,
+                        "type": "string",
+                        "description": "Third Party Postal",
+                        "nullable": true
+                    },
+                    "shippingInstructions": {
+                        "maxLength": 250,
+                        "type": "string",
+                        "description": "Shipping Instructions",
+                        "nullable": true
+                    },
+                    "customerNotes": {
+                        "maxLength": 250,
+                        "type": "string",
+                        "description": "Customer Notes",
+                        "nullable": true
+                    },
+                    "signatureRequired": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Enum.SignatureType"
+                            }
+                        ],
+                        "description": "Signature Required",
+                        "nullable": true
+                    },
+                    "orderItems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Order.Dtos.OrderItemCreationDto"
+                        },
+                        "description": "List Order Item"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Create Order By API"
+            },
+            "Order.Dtos.OrderItemCreationDto": {
+                "required": [
+                    "itemQty"
+                ],
+                "type": "object",
+                "properties": {
+                    "itemNo": {
+                        "maxLength": 30,
+                        "type": "string",
+                        "description": "Item No.",
+                        "nullable": true
+                    },
+                    "upcCode": {
+                        "maxLength": 16,
+                        "type": "string",
+                        "description": "UPC Code",
+                        "nullable": true
+                    },
+                    "itemQty": {
+                        "maximum": 2147483647,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Item Qty",
+                        "format": "int32"
+                    },
+                    "unitRetailPrice": {
+                        "type": "number",
+                        "description": "Unit Retail Price",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "loc": {
+                        "maxLength": 3,
+                        "type": "string",
+                        "description": "Ship From Location",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Order Item"
+            },
+            "Order.Dtos.OrderItemDto": {
+                "type": "object",
+                "properties": {
+                    "lineNo": {
+                        "type": "integer",
+                        "description": "Line No",
+                        "format": "int32"
+                    },
+                    "sku": {
+                        "type": "string",
+                        "description": "Product SKU",
+                        "nullable": true
+                    },
+                    "upc": {
+                        "type": "string",
+                        "description": "UPC",
+                        "nullable": true
+                    },
+                    "productName": {
+                        "type": "string",
+                        "description": "Product Name",
+                        "nullable": true
+                    },
+                    "qtyOrdered": {
+                        "type": "number",
+                        "description": "Qty Ordered",
+                        "format": "double"
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Line Item Status",
+                        "nullable": true
+                    },
+                    "unitRetailPrice": {
+                        "type": "number",
+                        "description": "Unit Retail Price",
+                        "format": "double",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Order Item"
+            },
+            "Order.Dtos.OrderOutDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Order ID",
+                        "format": "uuid"
+                    },
+                    "orderNo": {
+                        "type": "string",
+                        "description": "Order No",
+                        "nullable": true
+                    },
+                    "customerRetailOrderNo": {
+                        "type": "string",
+                        "description": "Customer Retail Order Number",
+                        "nullable": true
+                    },
+                    "orderDate": {
+                        "type": "string",
+                        "description": "Order Date",
+                        "format": "date-time"
+                    },
+                    "carrierSCACCode": {
+                        "type": "string",
+                        "description": "Carrier",
+                        "nullable": true
+                    },
+                    "shipTo": {
+                        "type": "string",
+                        "description": "Ship To",
+                        "nullable": true
+                    },
+                    "businessLine": {
+                        "type": "string",
+                        "description": "Business Line Name",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Order Status",
+                        "nullable": true
+                    },
+                    "hold": {
+                        "type": "boolean",
+                        "description": "Hold"
+                    },
+                    "shipToCustomerName": {
+                        "type": "string",
+                        "description": "Ship To Customer Name",
+                        "nullable": true
+                    },
+                    "shipToCompany": {
+                        "type": "string",
+                        "description": "Ship To Company",
+                        "nullable": true
+                    },
+                    "shipToPhone": {
+                        "type": "string",
+                        "description": "Ship To Phone",
+                        "nullable": true
+                    },
+                    "shipToAddressLine1": {
+                        "type": "string",
+                        "description": "Ship To AddressLine1",
+                        "nullable": true
+                    },
+                    "shipToAddressLine2": {
+                        "type": "string",
+                        "description": "Ship To AddressLine2",
+                        "nullable": true
+                    },
+                    "shipToEmail": {
+                        "type": "string",
+                        "description": "Ship To Email",
+                        "nullable": true
+                    },
+                    "shipToZipCode": {
+                        "type": "string",
+                        "description": "Ship To ZipCode",
+                        "nullable": true
+                    },
+                    "shipToCity": {
+                        "type": "string",
+                        "description": "Ship To City",
+                        "nullable": true
+                    },
+                    "shipToState": {
+                        "type": "string",
+                        "description": "Ship To State",
+                        "nullable": true
+                    },
+                    "shipToCountry": {
+                        "type": "string",
+                        "description": "Ship To Country",
+                        "nullable": true
+                    },
+                    "billToCustomerName": {
+                        "type": "string",
+                        "description": "Bill To Customer Name",
+                        "nullable": true
+                    },
+                    "billToCompany": {
+                        "type": "string",
+                        "description": "Bill To Company",
+                        "nullable": true
+                    },
+                    "billToAddressLine1": {
+                        "type": "string",
+                        "description": "Bill To AddressLine1",
+                        "nullable": true
+                    },
+                    "billToAddressLine2": {
+                        "type": "string",
+                        "description": "Bill To AddressLine2",
+                        "nullable": true
+                    },
+                    "billToCity": {
+                        "type": "string",
+                        "description": "Bill To City",
+                        "nullable": true
+                    },
+                    "billToState": {
+                        "type": "string",
+                        "description": "Bill To State",
+                        "nullable": true
+                    },
+                    "billToZipCode": {
+                        "type": "string",
+                        "description": "Bill To ZipCode",
+                        "nullable": true
+                    },
+                    "billToCountry": {
+                        "type": "string",
+                        "description": "Bill To Country\r\nCountry Code Example:US or CN",
+                        "nullable": true
+                    },
+                    "billToPhone": {
+                        "type": "string",
+                        "description": "Bill To Phone",
+                        "nullable": true
+                    },
+                    "billToEmail": {
+                        "type": "string",
+                        "description": "Bill To Email",
+                        "nullable": true
+                    },
+                    "customerCode": {
+                        "type": "string",
+                        "description": "Customer Code",
+                        "nullable": true
+                    },
+                    "crossDocking": {
+                        "type": "boolean",
+                        "description": "Cross Docking"
+                    },
+                    "thirdPartyCarrier": {
+                        "type": "string",
+                        "description": "Third Party Carrier",
+                        "nullable": true
+                    },
+                    "thirdPartyAccount": {
+                        "type": "string",
+                        "description": "Third Party Account",
+                        "nullable": true
+                    },
+                    "thirdPartyPostal": {
+                        "type": "string",
+                        "description": "Third Party Postal",
+                        "nullable": true
+                    },
+                    "requestShipDate": {
+                        "type": "string",
+                        "description": "Request Ship Date",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "cancelDate": {
+                        "type": "string",
+                        "description": "Cancel Date",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "shippingInstructions": {
+                        "type": "string",
+                        "description": "Shipping Instructions",
+                        "nullable": true
+                    },
+                    "customerNotes": {
+                        "type": "string",
+                        "description": "Customer Notes",
+                        "nullable": true
+                    },
+                    "signatureRequired": {
+                        "type": "string",
+                        "description": "Signature Required",
+                        "nullable": true
+                    },
+                    "orderItems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Order.Dtos.OrderItemDto"
+                        },
+                        "description": "Order Line Items",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Order Info"
+            },
+            "Order.Shipment.Dtos.ShipmentDetailDto": {
+                "type": "object",
+                "properties": {
+                    "itemNo": {
+                        "type": "string",
+                        "description": "Item No",
+                        "nullable": true
+                    },
+                    "itemQty": {
+                        "type": "number",
+                        "description": "Total Pack Item Qty",
+                        "format": "double",
+                        "readOnly": true
+                    },
+                    "packDetails": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Order.Shipment.Dtos.ShipmentPackDto"
+                        },
+                        "description": "List of pack item",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Shipment item detail"
+            },
+            "Order.Shipment.Dtos.ShipmentDto": {
+                "type": "object",
+                "properties": {
+                    "customerCode": {
+                        "type": "string",
+                        "description": "Customer Code",
+                        "nullable": true
+                    },
+                    "shipmentNo": {
+                        "type": "string",
+                        "description": "Shipment No",
+                        "nullable": true
+                    },
+                    "bolNo": {
+                        "type": "string",
+                        "description": "BOL No",
+                        "nullable": true
+                    },
+                    "loadNo": {
+                        "type": "string",
+                        "description": "Load No",
+                        "nullable": true
+                    },
+                    "shipDate": {
+                        "type": "string",
+                        "description": "Ship Date",
+                        "format": "date-time"
+                    },
+                    "shipMethod": {
+                        "type": "string",
+                        "description": "Ship Method",
+                        "nullable": true
+                    },
+                    "shipFromName": {
+                        "type": "string",
+                        "description": "Ship From Name",
+                        "nullable": true
+                    },
+                    "shipFromAddress1": {
+                        "type": "string",
+                        "description": "Ship From Address1",
+                        "nullable": true
+                    },
+                    "shipFromAddress2": {
+                        "type": "string",
+                        "description": "Ship From Address2",
+                        "nullable": true
+                    },
+                    "shipFromCity": {
+                        "type": "string",
+                        "description": "Ship From City",
+                        "nullable": true
+                    },
+                    "shipFromState": {
+                        "type": "string",
+                        "description": "Ship From State",
+                        "nullable": true
+                    },
+                    "shipFromZipCode": {
+                        "type": "string",
+                        "description": "Ship From ZipCode",
+                        "nullable": true
+                    },
+                    "shipFromCountry": {
+                        "type": "string",
+                        "description": "Ship From Country",
+                        "nullable": true
+                    },
+                    "shipToName": {
+                        "type": "string",
+                        "description": "Ship To Name",
+                        "nullable": true
+                    },
+                    "shipToCompanyName": {
+                        "type": "string",
+                        "description": "Ship To CompanyName",
+                        "nullable": true
+                    },
+                    "shipToAddress1": {
+                        "type": "string",
+                        "description": "Ship To Address1",
+                        "nullable": true
+                    },
+                    "shipToAddress2": {
+                        "type": "string",
+                        "description": "Ship To Address2",
+                        "nullable": true
+                    },
+                    "shipToCity": {
+                        "type": "string",
+                        "description": "Ship To City",
+                        "nullable": true
+                    },
+                    "shipToState": {
+                        "type": "string",
+                        "description": "Ship To State",
+                        "nullable": true
+                    },
+                    "shipToZipCode": {
+                        "type": "string",
+                        "description": "Ship To ZipCode",
+                        "nullable": true
+                    },
+                    "shipToCountry": {
+                        "type": "string",
+                        "description": "Ship To Country",
+                        "nullable": true
+                    },
+                    "customerOrderNo": {
+                        "type": "string",
+                        "description": "Customer Order No",
+                        "nullable": true
+                    },
+                    "customerOrderDate": {
+                        "type": "string",
+                        "description": "Customer Order Date",
+                        "format": "date-time"
+                    },
+                    "itemDetails": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Order.Shipment.Dtos.ShipmentDetailDto"
+                        },
+                        "description": "List of Shipment Item",
+                        "nullable": true
+                    },
+                    "totalShippingCost": {
+                        "type": "number",
+                        "format": "double"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Shipment Info"
+            },
+            "Order.Shipment.Dtos.ShipmentPackDto": {
+                "type": "object",
+                "properties": {
+                    "packID": {
+                        "type": "string",
+                        "description": "Pack ID",
+                        "nullable": true
+                    },
+                    "packQty": {
+                        "type": "number",
+                        "description": "Pack Qty",
+                        "format": "double"
+                    },
+                    "identifiers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Identifiers",
+                        "nullable": true
+                    },
+                    "shippingCost": {
+                        "type": "number",
+                        "format": "double"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Shipment pack item detail"
+            },
+            "Products.Dtos.InventoryDetailDto": {
+                "type": "object",
+                "properties": {
+                    "itemNo": {
+                        "type": "string",
+                        "description": "Product SKU",
+                        "nullable": true
+                    },
+                    "upc": {
+                        "type": "string",
+                        "description": "UPC",
+                        "nullable": true
+                    },
+                    "onHandQty": {
+                        "type": "integer",
+                        "description": "Total Qty OnHand",
+                        "format": "int32"
+                    },
+                    "freezeQty": {
+                        "type": "integer",
+                        "description": "Total Freeze Qty",
+                        "format": "int32"
+                    },
+                    "openOrderQty": {
+                        "type": "integer",
+                        "description": "Open Order Qty",
+                        "format": "int32"
+                    },
+                    "allocatedOrderQty": {
+                        "type": "integer",
+                        "description": "Total Allocated Order Qty",
+                        "format": "int32"
+                    },
+                    "totalAvailableQty": {
+                        "type": "integer",
+                        "description": "Total Available Qty",
+                        "format": "int32"
+                    },
+                    "incomingQty": {
+                        "type": "integer",
+                        "description": "Incoming Qty",
+                        "format": "int32"
+                    },
+                    "inTransitQty": {
+                        "type": "integer",
+                        "description": "InTransit Qty",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Item Inventory Detail"
+            },
+            "Products.Dtos.InventoryDto": {
+                "type": "object",
+                "properties": {
+                    "customerCode": {
+                        "type": "string",
+                        "description": "Customer Code",
+                        "nullable": true
+                    },
+                    "feedDate": {
+                        "type": "string",
+                        "description": "Feed Date",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "inventoryDetails": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Products.Dtos.InventoryDetailDto"
+                        },
+                        "description": "Item Inventory Detail",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Product Inventory"
+            },
+            "Products.Dtos.ItemCreationDto": {
+                "required": [
+                    "changeType",
+                    "height",
+                    "length",
+                    "productDescription",
+                    "productSKU",
+                    "productType",
+                    "receivingCasePack",
+                    "status",
+                    "upc",
+                    "weight",
+                    "width"
+                ],
+                "type": "object",
+                "properties": {
+                    "changeType": {
+                        "enum": [
+                            "New",
+                            "Change"
+                        ],
+                        "type": "String",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Enum.ProductChangeType"
+                            }
+                        ],
+                        "description": "ChangeType",
+                        "format": "String"
+                    },
+                    "productSKU": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "ProductSKU"
+                    },
+                    "productDescription": {
+                        "maxLength": 250,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "ProductDescription"
+                    },
+                    "upc": {
+                        "maxLength": 16,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "UPC"
+                    },
+                    "productType": {
+                        "enum": [
+                            "Standard",
+                            "Assortment",
+                            "Kit"
+                        ],
+                        "type": "String",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Enum.ProductType"
+                            }
+                        ],
+                        "description": "ProductType",
+                        "format": "String"
+                    },
+                    "receivingCasePack": {
+                        "pattern": "^[1-9]\\d*$",
+                        "type": "integer",
+                        "description": "Receiving Case Pack",
+                        "format": "int32"
+                    },
+                    "length": {
+                        "pattern": "^([+]?)[0-9]*\\.?\\d{0,2}$",
+                        "type": "number",
+                        "description": "Receiving Length",
+                        "format": "double"
+                    },
+                    "width": {
+                        "pattern": "^([+]?)[0-9]*\\.?\\d{0,2}$",
+                        "type": "number",
+                        "description": "Receiving Width",
+                        "format": "double"
+                    },
+                    "height": {
+                        "pattern": "^([+]?)[0-9]*\\.?\\d{0,2}$",
+                        "type": "number",
+                        "description": "Receiving Height",
+                        "format": "double"
+                    },
+                    "weight": {
+                        "pattern": "^([+]?)[0-9]*\\.?\\d{0,2}$",
+                        "type": "number",
+                        "description": "Receiving Weight",
+                        "format": "double"
+                    },
+                    "salesCasePack": {
+                        "pattern": "^[1-9]\\d*$",
+                        "type": "integer",
+                        "description": "Sales Case Pack",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "salesLength": {
+                        "pattern": "^([+]?)[0-9]*\\.?\\d{0,2}$",
+                        "type": "number",
+                        "description": "Sales Length",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "salesWidth": {
+                        "pattern": "^([+]?)[0-9]*\\.?\\d{0,2}$",
+                        "type": "number",
+                        "description": "Sales Width",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "salesHeight": {
+                        "pattern": "^([+]?)[0-9]*\\.?\\d{0,2}$",
+                        "type": "number",
+                        "description": "Sales Height",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "countryOfOrigin": {
+                        "maxLength": 100,
+                        "type": "string",
+                        "description": "Country Of Origin",
+                        "nullable": true
+                    },
+                    "harmonizedCode": {
+                        "maxLength": 25,
+                        "type": "string",
+                        "description": "HarmonizedCode",
+                        "nullable": true
+                    },
+                    "productCost": {
+                        "pattern": "^([+]?)[0-9]*\\.?\\d{0,2}$",
+                        "type": "number",
+                        "description": "Product Cost",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "status": {
+                        "enum": [
+                            "Pending",
+                            "Active",
+                            "Disabled"
+                        ],
+                        "type": "String",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Enum.ProductStatus"
+                            }
+                        ],
+                        "format": "String"
+                    },
+                    "lotNo": {
+                        "maxLength": 100,
+                        "type": "string",
+                        "description": "Lot Number",
+                        "nullable": true
+                    },
+                    "supplierNo": {
+                        "maxLength": 100,
+                        "type": "string",
+                        "description": "Supplier Number",
+                        "nullable": true
+                    },
+                    "identifierRequired": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Enum.BasicBool"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "ctnperPallet": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Item Creation Dto"
+            },
+            "Products.Dtos.ItemCreationOutDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Product ID",
+                        "format": "uuid"
+                    },
+                    "productSKU": {
+                        "type": "string",
+                        "description": "Product SKU",
+                        "nullable": true
+                    },
+                    "productDescription": {
+                        "type": "string",
+                        "description": "Product Description",
+                        "nullable": true
+                    },
+                    "upc": {
+                        "type": "string",
+                        "description": "UPC",
+                        "nullable": true
+                    },
+                    "productType": {
+                        "type": "integer",
+                        "description": "Product Type",
+                        "format": "int32"
+                    },
+                    "productTypeName": {
+                        "type": "string",
+                        "description": "ProductTypeName",
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "receivingCasePack": {
+                        "type": "integer",
+                        "description": "Receiving Case Pack",
+                        "format": "int32"
+                    },
+                    "length": {
+                        "type": "number",
+                        "description": "Length",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "width": {
+                        "type": "number",
+                        "description": "Width",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "height": {
+                        "type": "number",
+                        "description": "Height",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "weight": {
+                        "type": "number",
+                        "description": "Weight",
+                        "format": "double"
+                    },
+                    "unitWeight": {
+                        "type": "number",
+                        "description": "UnitWeight",
+                        "format": "double"
+                    },
+                    "sellingCasePack": {
+                        "type": "integer",
+                        "description": "Sales Case Pack",
+                        "format": "int32"
+                    },
+                    "salesLength": {
+                        "type": "number",
+                        "description": "Sales Length",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "salesWidth": {
+                        "type": "number",
+                        "description": "Sales Width",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "salesHeight": {
+                        "type": "number",
+                        "description": "Sales Height",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "salesWeight": {
+                        "type": "number",
+                        "description": "Sales Weight",
+                        "format": "double"
+                    },
+                    "salesUnitWeight": {
+                        "type": "number",
+                        "description": "Sales UnitWeight",
+                        "format": "double"
+                    },
+                    "liftType": {
+                        "type": "integer",
+                        "description": "LiftType",
+                        "format": "int32"
+                    },
+                    "liftTypeName": {
+                        "type": "string",
+                        "description": "LiftTypeName",
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "countryCode": {
+                        "type": "string",
+                        "description": "Country Code",
+                        "nullable": true
+                    },
+                    "countryName": {
+                        "type": "string",
+                        "description": "Country Name",
+                        "nullable": true
+                    },
+                    "harmonizedCode": {
+                        "type": "string",
+                        "description": "HarmonizedCode",
+                        "nullable": true
+                    },
+                    "productCost": {
+                        "type": "number",
+                        "description": "Product Cost",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "lotNo": {
+                        "type": "string",
+                        "description": "Lot Number",
+                        "nullable": true
+                    },
+                    "supplierNo": {
+                        "type": "string",
+                        "description": "Supplier Number",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "integer",
+                        "description": "Status",
+                        "format": "int32"
+                    },
+                    "statusName": {
+                        "type": "string",
+                        "description": "Status Name",
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "identifierRequired": {
+                        "type": "integer",
+                        "description": "IdentifierRequired",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "identifierRequiredText": {
+                        "type": "string",
+                        "description": "IdentifierRequired Text",
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "createdDate": {
+                        "type": "string",
+                        "description": "CreatedDate",
+                        "format": "date-time"
+                    },
+                    "createdBy": {
+                        "type": "string",
+                        "description": "CreatedBy",
+                        "nullable": true
+                    },
+                    "lastUpdatedDate": {
+                        "type": "string",
+                        "description": "LastUpdatedDate",
+                        "format": "date-time"
+                    },
+                    "lastUpdatedBy": {
+                        "type": "string",
+                        "description": "LastUpdatedBy",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "ItemCreationOutDto"
+            },
+            "Products.Dtos.ProductCreationDto": {
+                "required": [
+                    "customerCode",
+                    "items"
+                ],
+                "type": "object",
+                "properties": {
+                    "customerCode": {
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Customer Code"
+                    },
+                    "autoUpdate": {
+                        "type": "boolean"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Products.Dtos.ItemCreationDto"
+                        },
+                        "description": "List Order Item"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Product Creation Dto"
+            },
+            "Products.Dtos.ProductCreationOutDto": {
+                "type": "object",
+                "properties": {
+                    "customerCode": {
+                        "type": "string",
+                        "description": "Customer Code",
+                        "nullable": true
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Products.Dtos.ItemCreationOutDto"
+                        },
+                        "description": "List Order Item",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Product Creation Out Dto"
+            },
+            "Receivings.Dtos.ReceivingCreationDto": {
+                "required": [
+                    "bolNo",
+                    "carrierSCAC",
+                    "containerNo",
+                    "crossDocking",
+                    "customerCode",
+                    "receivingItems",
+                    "receivingOrder",
+                    "sealNo",
+                    "shipDate",
+                    "shipToAddressLine",
+                    "shipToCity",
+                    "shipToCode",
+                    "shipToName",
+                    "shipToState",
+                    "shipToZipcode",
+                    "supplier"
+                ],
+                "type": "object",
+                "properties": {
+                    "customerCode": {
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Customer Code"
+                    },
+                    "receivingOrder": {
+                        "maxLength": 25,
+                        "minLength": 1,
+                        "pattern": "^[a-zA-Z0-9\\-]+$",
+                        "type": "string",
+                        "description": "Receiving Order No."
+                    },
+                    "supplier": {
+                        "maxLength": 50,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Supplier"
+                    },
+                    "containerNo": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "pattern": "^[a-zA-Z0-9\\-]+$",
+                        "type": "string",
+                        "description": "Container No."
+                    },
+                    "containerType": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Enum.ContainerType"
+                            }
+                        ],
+                        "description": "Container Type",
+                        "nullable": true
+                    },
+                    "carrierSCAC": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Carrier SCAC"
+                    },
+                    "bolNo": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "pattern": "^[a-zA-Z0-9\\-]+$",
+                        "type": "string",
+                        "description": "BOL No."
+                    },
+                    "sealNo": {
+                        "maxLength": 50,
+                        "minLength": 1,
+                        "pattern": "^[a-zA-Z0-9\\-]+$",
+                        "type": "string",
+                        "description": "Seal No."
+                    },
+                    "shipDate": {
+                        "type": "string",
+                        "description": "Ship Date",
+                        "format": "date-time"
+                    },
+                    "crossDocking": {
+                        "type": "boolean",
+                        "description": "Cross Docking"
+                    },
+                    "shipToCode": {
+                        "maxLength": 3,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To Code"
+                    },
+                    "shipToName": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To Name"
+                    },
+                    "shipToCompany": {
+                        "maxLength": 100,
+                        "type": "string",
+                        "description": "Ship To Company",
+                        "nullable": true
+                    },
+                    "shipToAddressLine": {
+                        "maxLength": 50,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To AddressLine"
+                    },
+                    "shipToCity": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To City"
+                    },
+                    "shipToState": {
+                        "maxLength": 50,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To State"
+                    },
+                    "shipToZipcode": {
+                        "maxLength": 15,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship To Zipcode"
+                    },
+                    "shipToPhone": {
+                        "maxLength": 20,
+                        "type": "string",
+                        "description": "Ship To Phone",
+                        "nullable": true
+                    },
+                    "shipToEmail": {
+                        "maxLength": 100,
+                        "type": "string",
+                        "description": "ShipToEmail",
+                        "nullable": true
+                    },
+                    "comment": {
+                        "maxLength": 1000,
+                        "type": "string",
+                        "description": "Comment",
+                        "nullable": true
+                    },
+                    "estimatedDeliveryDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "receivingItems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Receivings.Dtos.ReceivingItemCreationDto"
+                        },
+                        "description": "List Receiving Item"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Create Receiving Order By API"
+            },
+            "Receivings.Dtos.ReceivingItemCreationDto": {
+                "required": [
+                    "casePack",
+                    "itemNo",
+                    "itemQty",
+                    "itemUPC"
+                ],
+                "type": "object",
+                "properties": {
+                    "itemNo": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Item No."
+                    },
+                    "itemUPC": {
+                        "maxLength": 16,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "UPC Code"
+                    },
+                    "itemQty": {
+                        "maximum": 2147483647,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Item Qty",
+                        "format": "int32"
+                    },
+                    "casePack": {
+                        "maximum": 2147483647,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Case Pack",
+                        "format": "int32"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Receiving Item"
+            },
+            "Receivings.Dtos.ReceivingLineOutDto": {
+                "type": "object",
+                "properties": {
+                    "lineNo": {
+                        "type": "integer",
+                        "description": "Line No.",
+                        "format": "int32"
+                    },
+                    "sku": {
+                        "type": "string",
+                        "description": "Product SKU",
+                        "nullable": true
+                    },
+                    "upc": {
+                        "type": "string",
+                        "description": "Item UPC",
+                        "nullable": true
+                    },
+                    "productDesc": {
+                        "type": "string",
+                        "description": "Product Description",
+                        "nullable": true
+                    },
+                    "qtyOrdered": {
+                        "type": "number",
+                        "description": "Quantity Ordered",
+                        "format": "double"
+                    },
+                    "qtyReceived": {
+                        "type": "number",
+                        "description": "Quantity Received",
+                        "format": "double"
+                    },
+                    "casePack": {
+                        "type": "number",
+                        "description": "Case Pack",
+                        "format": "double"
+                    },
+                    "lineStatus": {
+                        "type": "string",
+                        "description": "Line Item Status",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Receiving Item"
+            },
+            "Receivings.Dtos.ReceivingOutDto": {
+                "type": "object",
+                "properties": {
+                    "customerCode": {
+                        "type": "string",
+                        "description": "Customer Code",
+                        "nullable": true
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "Order ID",
+                        "format": "uuid"
+                    },
+                    "receivingOrder": {
+                        "type": "string",
+                        "description": "Receiving Order",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Order Status",
+                        "nullable": true
+                    },
+                    "supplierName": {
+                        "type": "string",
+                        "description": "Supplier",
+                        "nullable": true
+                    },
+                    "carrier": {
+                        "type": "string",
+                        "description": "Carrier",
+                        "nullable": true
+                    },
+                    "carrierSCAC": {
+                        "type": "string",
+                        "description": "Carrier SCAC",
+                        "nullable": true
+                    },
+                    "containerNo": {
+                        "type": "string",
+                        "description": "Container No.",
+                        "nullable": true
+                    },
+                    "containerType": {
+                        "type": "string",
+                        "description": "Container Type",
+                        "nullable": true
+                    },
+                    "bolNo": {
+                        "type": "string",
+                        "description": "BOL No.",
+                        "nullable": true
+                    },
+                    "sealNo": {
+                        "type": "string",
+                        "description": "Seal No.",
+                        "nullable": true
+                    },
+                    "shipDate": {
+                        "type": "string",
+                        "description": "Ship Date",
+                        "format": "date-time"
+                    },
+                    "crossDocking": {
+                        "type": "boolean",
+                        "description": "Cross Docking"
+                    },
+                    "shipToCode": {
+                        "type": "string",
+                        "description": "Ship To",
+                        "nullable": true
+                    },
+                    "shipToName": {
+                        "type": "string",
+                        "description": "Ship To Name",
+                        "nullable": true
+                    },
+                    "shipToCompany": {
+                        "type": "string",
+                        "description": "Ship To Company",
+                        "nullable": true
+                    },
+                    "shipToAddressLine": {
+                        "type": "string",
+                        "description": "Ship To AddressLine",
+                        "nullable": true
+                    },
+                    "shipToCity": {
+                        "type": "string",
+                        "description": "Ship To City",
+                        "nullable": true
+                    },
+                    "shipToState": {
+                        "type": "string",
+                        "description": "Ship To State",
+                        "nullable": true
+                    },
+                    "shipToZipcode": {
+                        "type": "string",
+                        "description": "Ship To Zipcode",
+                        "nullable": true
+                    },
+                    "shipToPhone": {
+                        "type": "string",
+                        "description": "Ship To Phone",
+                        "nullable": true
+                    },
+                    "shipToEmail": {
+                        "type": "string",
+                        "description": "Ship To Email",
+                        "nullable": true
+                    },
+                    "comment": {
+                        "type": "string",
+                        "description": "Comment",
+                        "nullable": true
+                    },
+                    "receivingLines": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Receivings.Dtos.ReceivingLineOutDto"
+                        },
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false
+            },
+            "ReleaseSOs.API.ReleaseSOCreationDto": {
+                "required": [
+                    "customerCode",
+                    "orderDate",
+                    "orderItems",
+                    "requestShipDate",
+                    "shipFromLoc"
+                ],
+                "type": "object",
+                "properties": {
+                    "customerCode": {
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Customer Code"
+                    },
+                    "releaseOrderNo": {
+                        "maxLength": 25,
+                        "type": "string",
+                        "description": "Release Order Number",
+                        "nullable": true
+                    },
+                    "orderDate": {
+                        "type": "string",
+                        "description": "Order Date",
+                        "format": "date-time"
+                    },
+                    "requestShipDate": {
+                        "type": "string",
+                        "description": "Request Ship Date",
+                        "format": "date-time"
+                    },
+                    "shipFromLoc": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Ship From"
+                    },
+                    "scacCode": {
+                        "maxLength": 50,
+                        "type": "string",
+                        "description": "SCAC Code",
+                        "nullable": true
+                    },
+                    "shipToName": {
+                        "type": "string",
+                        "description": "Ship To Customer Name",
+                        "nullable": true
+                    },
+                    "shipToCompany": {
+                        "type": "string",
+                        "description": "Ship To Company",
+                        "nullable": true
+                    },
+                    "shipToAddressLine1": {
+                        "type": "string",
+                        "description": "Ship To AddressLine1",
+                        "nullable": true
+                    },
+                    "shipToZipCode": {
+                        "type": "string",
+                        "description": "Ship To ZipCode",
+                        "nullable": true
+                    },
+                    "shipToCity": {
+                        "type": "string",
+                        "description": "Ship To City",
+                        "nullable": true
+                    },
+                    "shipToState": {
+                        "type": "string",
+                        "description": "Ship To State",
+                        "nullable": true
+                    },
+                    "shipToCountry": {
+                        "type": "string",
+                        "description": "Ship To Country",
+                        "nullable": true
+                    },
+                    "shipToPhone": {
+                        "type": "string",
+                        "description": "Ship To Phone",
+                        "nullable": true
+                    },
+                    "shippingInstructions": {
+                        "type": "string",
+                        "description": "Shipping Instructions",
+                        "nullable": true
+                    },
+                    "orderItems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ReleaseSOs.API.ReleaseSOItemCreationDto"
+                        },
+                        "description": "Order Item"
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Create Release SO By API"
+            },
+            "ReleaseSOs.API.ReleaseSOItemCreationDto": {
+                "required": [
+                    "entranceID",
+                    "itemNo",
+                    "itemQty",
+                    "itemUPC"
+                ],
+                "type": "object",
+                "properties": {
+                    "itemNo": {
+                        "maxLength": 30,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Item No."
+                    },
+                    "itemUPC": {
+                        "maxLength": 16,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "UPC Code"
+                    },
+                    "itemQty": {
+                        "maximum": 999999,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Item Qty",
+                        "format": "int32"
+                    },
+                    "entranceID": {
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Entrance Document ID"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "ReleaseSOs.API.ReleaseSOItemCreationOutDto": {
+                "type": "object",
+                "properties": {
+                    "lineNo": {
+                        "type": "integer",
+                        "description": "Line No",
+                        "format": "int32"
+                    },
+                    "itemNo": {
+                        "type": "string",
+                        "description": "Item No.",
+                        "nullable": true
+                    },
+                    "itemUPC": {
+                        "type": "string",
+                        "description": "UPC Code",
+                        "nullable": true
+                    },
+                    "itemQty": {
+                        "type": "integer",
+                        "description": "Item Qty",
+                        "format": "int32"
+                    },
+                    "entranceID": {
+                        "type": "string",
+                        "description": "Entrance Document ID",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Order Item"
+            },
+            "ReleaseSOs.API.ReleaseSOOutDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Release SO Id",
+                        "format": "uuid"
+                    },
+                    "orderNo": {
+                        "type": "string",
+                        "description": "Release Order Number",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Order Status",
+                        "nullable": true
+                    },
+                    "orderDate": {
+                        "type": "string",
+                        "description": "Order Date",
+                        "format": "date-time"
+                    },
+                    "requestShipDate": {
+                        "type": "string",
+                        "description": "Request Ship Date",
+                        "format": "date-time"
+                    },
+                    "shipFrom": {
+                        "type": "string",
+                        "description": "Ship From",
+                        "nullable": true
+                    },
+                    "shipToCustomerName": {
+                        "type": "string",
+                        "description": "Ship To Customer Name",
+                        "nullable": true
+                    },
+                    "shipToCompany": {
+                        "type": "string",
+                        "description": "Ship To Company",
+                        "nullable": true
+                    },
+                    "shipToAddressLine1": {
+                        "type": "string",
+                        "description": "Ship To Address 1st Line",
+                        "nullable": true
+                    },
+                    "shipToZipCode": {
+                        "type": "string",
+                        "description": "Ship To Zip Code",
+                        "nullable": true
+                    },
+                    "shipToCity": {
+                        "type": "string",
+                        "description": "Ship To City",
+                        "nullable": true
+                    },
+                    "shipToState": {
+                        "type": "string",
+                        "description": "Ship To State",
+                        "nullable": true
+                    },
+                    "shipToCountry": {
+                        "type": "string",
+                        "description": "Ship To Country",
+                        "nullable": true
+                    },
+                    "shipToPhone": {
+                        "type": "string",
+                        "description": "Ship To Phone",
+                        "nullable": true
+                    },
+                    "scacCode": {
+                        "type": "string",
+                        "description": "SCAC Code",
+                        "nullable": true
+                    },
+                    "shippingInstructions": {
+                        "type": "string",
+                        "description": "Shipping Instructions",
+                        "nullable": true
+                    },
+                    "companyCode": {
+                        "type": "string",
+                        "description": "Company Code",
+                        "nullable": true
+                    },
+                    "orderItems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ReleaseSOs.API.ReleaseSOItemCreationOutDto"
+                        },
+                        "description": "Order Items",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Release SO Info"
+            },
+            "ResultDto": {
+                "type": "object",
+                "properties": {
+                    "successful": {
+                        "type": "boolean",
+                        "description": "Indicate business handle result (Not http result)"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Result Code",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Result Message",
+                        "nullable": true
+                    },
+                    "data": {
+                        "description": "Result Data",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Result Dto"
+            },
+            "ResultDto[Account.JwtTokenResultDto]": {
+                "type": "object",
+                "properties": {
+                    "successful": {
+                        "type": "boolean",
+                        "description": "Indicate business handle result (Not http result)"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Result Code",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Result Message",
+                        "nullable": true
+                    },
+                    "data": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Account.JwtTokenResultDto"
+                            }
+                        ],
+                        "description": "Result Data",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Result Dto"
+            },
+            "ResultDto[InboundPOs.InboundPOOutDto]": {
+                "type": "object",
+                "properties": {
+                    "successful": {
+                        "type": "boolean",
+                        "description": "Indicate business handle result (Not http result)"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Result Code",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Result Message",
+                        "nullable": true
+                    },
+                    "data": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/InboundPOs.InboundPOOutDto"
+                            }
+                        ],
+                        "description": "Result Data",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Result Dto"
+            },
+            "ResultDto[List[Invoice.Dtos.InvoiceOutDto]]": {
+                "type": "object",
+                "properties": {
+                    "successful": {
+                        "type": "boolean",
+                        "description": "Indicate business handle result (Not http result)"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Result Code",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Result Message",
+                        "nullable": true
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Invoice.Dtos.InvoiceOutDto"
+                        },
+                        "description": "Result Data",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Result Dto"
+            },
+            "ResultDto[List[Order.Shipment.Dtos.ShipmentDto]]": {
+                "type": "object",
+                "properties": {
+                    "successful": {
+                        "type": "boolean",
+                        "description": "Indicate business handle result (Not http result)"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Result Code",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Result Message",
+                        "nullable": true
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Order.Shipment.Dtos.ShipmentDto"
+                        },
+                        "description": "Result Data",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Result Dto"
+            },
+            "ResultDto[Order.Dtos.EstimatedShippingCostResultDto]": {
+                "type": "object",
+                "properties": {
+                    "successful": {
+                        "type": "boolean",
+                        "description": "Indicate business handle result (Not http result)"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Result Code",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Result Message",
+                        "nullable": true
+                    },
+                    "data": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Order.Dtos.EstimatedShippingCostResultDto"
+                            }
+                        ],
+                        "description": "Result Data",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Result Dto"
+            },
+            "ResultDto[Order.Dtos.OrderOutDto]": {
+                "type": "object",
+                "properties": {
+                    "successful": {
+                        "type": "boolean",
+                        "description": "Indicate business handle result (Not http result)"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Result Code",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Result Message",
+                        "nullable": true
+                    },
+                    "data": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Order.Dtos.OrderOutDto"
+                            }
+                        ],
+                        "description": "Result Data",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Result Dto"
+            },
+            "ResultDto[Products.Dtos.InventoryDto]": {
+                "type": "object",
+                "properties": {
+                    "successful": {
+                        "type": "boolean",
+                        "description": "Indicate business handle result (Not http result)"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Result Code",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Result Message",
+                        "nullable": true
+                    },
+                    "data": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Products.Dtos.InventoryDto"
+                            }
+                        ],
+                        "description": "Result Data",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Result Dto"
+            },
+            "ResultDto[Products.Dtos.ProductCreationOutDto]": {
+                "type": "object",
+                "properties": {
+                    "successful": {
+                        "type": "boolean",
+                        "description": "Indicate business handle result (Not http result)"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Result Code",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Result Message",
+                        "nullable": true
+                    },
+                    "data": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Products.Dtos.ProductCreationOutDto"
+                            }
+                        ],
+                        "description": "Result Data",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Result Dto"
+            },
+            "ResultDto[Receivings.Dtos.ReceivingOutDto]": {
+                "type": "object",
+                "properties": {
+                    "successful": {
+                        "type": "boolean",
+                        "description": "Indicate business handle result (Not http result)"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Result Code",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Result Message",
+                        "nullable": true
+                    },
+                    "data": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Receivings.Dtos.ReceivingOutDto"
+                            }
+                        ],
+                        "description": "Result Data",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Result Dto"
+            },
+            "ResultDto[ReleaseSOs.API.ReleaseSOOutDto]": {
+                "type": "object",
+                "properties": {
+                    "successful": {
+                        "type": "boolean",
+                        "description": "Indicate business handle result (Not http result)"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Result Code",
+                        "nullable": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Result Message",
+                        "nullable": true
+                    },
+                    "data": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ReleaseSOs.API.ReleaseSOOutDto"
+                            }
+                        ],
+                        "description": "Result Data",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "description": "Result Dto"
+            },
+            "ValidationErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "members": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true,
+                        "readOnly": true
+                    }
+                },
+                "additionalProperties": false
+            }
+        },
+        "securitySchemes": {
+            "JwtBearer": {
+                "type": "http",
+                "description": "Set access token in http header. <br>Authorization: Bearer TokenString",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

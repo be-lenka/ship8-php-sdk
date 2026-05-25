@@ -1,0 +1,41 @@
+{
+    "name": "be-lenka/ship8-php-sdk",
+    "description": "PHP SDK for the Ship8 fulfillment / 3PL API. Provides typed clients, models and OAuth2 authentication for integrating order, shipment and inventory data with Ship8.",
+    "keywords": [
+        "ship8",
+        "3pl",
+        "fulfillment",
+        "shipping",
+        "logistics",
+        "php",
+        "sdk",
+        "rest",
+        "api"
+    ],
+    "homepage": "https://github.com/be-lenka/ship8-php-sdk",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "BeLenka",
+            "homepage": "https://github.com/be-lenka"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "guzzlehttp/guzzle": "^6.2 || ^7.0",
+        "guzzlehttp/psr7": "^1.4 || ^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0 || ^9.0",
+        "friendsofphp/php-cs-fixer": "^2.12 || ^3.0"
+    },
+    "autoload": {
+        "psr-4": { "BeLenka\\Ship8\\" : "lib/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "BeLenka\\Ship8\\Test\\" : "test/" }
+    }
+}
