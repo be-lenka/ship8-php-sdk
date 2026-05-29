@@ -118,6 +118,35 @@ abstract class AbstractModel implements ModelInterface, ArrayAccess, JsonSeriali
     }
 
     /**
+     * Whether the OpenAPI schema declares the given property name on this
+     * model. Use this in place of `method_exists($model, 'get<Property>')`
+     * — the auto-generated `get*` / `set*` accessors are dispatched via
+     * {@see __call()} and are therefore invisible to PHP's `method_exists()`
+     * (which only sees explicitly declared methods).
+     *
+     * Example — instead of:
+     *
+     *     // BUG: always false for SDK models → silently empty result
+     *     if (method_exists($inv, 'getInventoryDetails')) {
+     *         $rows = $inv->getInventoryDetails();
+     *     }
+     *
+     * Write:
+     *
+     *     if ($inv instanceof InventoryDto) {           // typed return
+     *         $rows = $inv->getInventoryDetails() ?? [];
+     *     }
+     *     // or, when the model class is dynamic:
+     *     if ($inv && $inv->hasProperty('inventoryDetails')) {
+     *         $rows = $inv->getInventoryDetails() ?? [];
+     *     }
+     */
+    public function hasProperty(string $name): bool
+    {
+        return array_key_exists($name, static::openAPITypes());
+    }
+
+    /**
      * Default attribute map: identity mapping derived from $openAPITypes.
      * Subclasses override only when wire name differs from the property name.
      *
