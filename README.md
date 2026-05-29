@@ -135,6 +135,42 @@ Ship8 wraps every response in a `ResultDto` envelope:
 deserialized into the appropriate model. When `successful` is `false`, an
 `ApiException` is raised carrying the server's `code` and `message`.
 
+## Accessing model properties (do not use `method_exists`)
+
+Model getters and setters are dispatched through `AbstractModel::__call()` —
+they are not declared as concrete methods. PHP's `method_exists()` only sees
+explicitly declared methods, so a guard like:
+
+```php
+// BUG: always false → silently empty result
+if (method_exists($inv, 'getInventoryDetails')) {
+    $rows = $inv->getInventoryDetails();
+}
+```
+
+will **never** enter the `if`. Use one of the supported patterns instead:
+
+```php
+// 1) Direct call — every API method declares its return type, just trust it
+$rows = $api->getInventory()->getInventoryDetails() ?? [];
+
+// 2) instanceof check (defensive against null / exception paths)
+$inv = $api->getInventory();
+if ($inv instanceof \BeLenka\Ship8\Model\InventoryDto) {
+    $rows = $inv->getInventoryDetails() ?? [];
+}
+
+// 3) hasProperty() helper (when the model class is not known statically)
+if ($model && $model->hasProperty('inventoryDetails')) {
+    $rows = $model->getInventoryDetails() ?? [];
+}
+
+// 4) is_callable also works (sees magic methods)
+if (is_callable([$inv, 'getInventoryDetails'])) {
+    $rows = $inv->getInventoryDetails() ?? [];
+}
+```
+
 ## API endpoints
 
 | Class                       | Method                       | HTTP                                                              |

@@ -56,3 +56,49 @@ composer install
 - Order query params are camelCase; Shipment query params are PascalCase (documented in code)
 - Adding a new endpoint is a one-method change in the corresponding API class
 - Credentials should never be hardcoded; pass via `Configuration`
+
+## Pitfalls
+
+### `method_exists()` does not see SDK model getters
+
+Every `get<Property>` / `set<Property>` accessor on a Model is dispatched
+through `AbstractModel::__call()`. PHP's `method_exists()` only reports
+**explicitly declared** methods — magic methods are invisible. So:
+
+```php
+$inv = $api->getInventory();                              // returns InventoryDto
+method_exists($inv, 'getInventoryDetails');               // FALSE — always!
+is_callable([$inv, 'getInventoryDetails']);               // TRUE
+$inv instanceof \BeLenka\Ship8\Model\InventoryDto;        // TRUE
+$inv->hasProperty('inventoryDetails');                    // TRUE
+```
+
+A real consumer (Venalio, 2026-05-29) shipped this exact bug for ~10 days:
+
+```php
+$details = ($inv && method_exists($inv, 'getInventoryDetails'))   // never true
+    ? ($inv->getInventoryDetails() ?? [])                          // never reached
+    : [];                                                          // always taken
+```
+
+The endpoint returned 9443 rows; the consumer reported "0 rows, partner is
+broken." Don't repeat this. Use one of:
+
+```php
+// Option A (preferred — the API method already declares the return type):
+$rows = $inv->getInventoryDetails() ?? [];                  // direct call, trust the type
+
+// Option B (defensive against null/exception path):
+if ($inv instanceof InventoryDto) {
+    $rows = $inv->getInventoryDetails() ?? [];
+}
+
+// Option C (when the model class is dynamic — use the SDK helper):
+if ($inv && $inv->hasProperty('inventoryDetails')) {
+    $rows = $inv->getInventoryDetails() ?? [];
+}
+```
+
+Every endpoint that returns a model (which is every endpoint) is exposed to
+this trap. Audit consumer code for `method_exists($model, 'get...')` patterns
+and replace them.
