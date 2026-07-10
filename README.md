@@ -7,10 +7,10 @@
 
 PHP client for the [Ship8](https://ship8.com) fulfillment / 3PL platform.
 Provides typed models, JWT authentication and Guzzle-based transport so you
-can integrate orders, shipments, inbound POs, receiving, releases, products,
-inventory, invoices and freight quotes from any PHP application.
+can integrate orders, shipments, inbound POs, receiving, releases, returns,
+products, inventory, invoices and freight quotes from any PHP application.
 
-> **Status:** v0.2 — endpoints and models match the published Ship8 OpenAPI
+> **Status:** v0.3 — endpoints and models match the published Ship8 OpenAPI
 > spec (see `resources/swagger.json`). Authenticated against the sandbox
 > environment.
 
@@ -123,6 +123,38 @@ password:
 $auth->refresh(); // uses the access + refresh tokens captured during authenticate()
 ```
 
+## Creating a return order
+
+Return orders mirror the order-create flow. Each line requires **both**
+`itemNo` and `itemUpc`:
+
+```php
+use BeLenka\Ship8\Api\ReturnOrderApi;
+use BeLenka\Ship8\Model\ReturnOrderCreationDto;
+use BeLenka\Ship8\Model\ReturnOrderItemCreationDto;
+
+$returnApi = new ReturnOrderApi(null, $config);
+
+$return = (new ReturnOrderCreationDto())
+    ->setCustomerCode('ACME')
+    ->setReturnOrderNo('RMA-001')
+    ->setReturnDate(new \DateTime())
+    ->setTrackingNo('1Z999AA10123456784')
+    ->setOrderItems([
+        (new ReturnOrderItemCreationDto())
+            ->setItemNo('SKU-1')
+            ->setItemUpc('0001234567890')
+            ->setItemQty(2),
+    ]);
+
+try {
+    $out = $returnApi->create($return);
+    printf("Return %s — status %s\n", $out->getReturnOrderNo(), $out->getStatus());
+} catch (\BeLenka\Ship8\ApiException $e) {
+    fwrite(STDERR, sprintf("Ship8 error [%d]: %s\n", $e->getCode(), $e->getMessage()));
+}
+```
+
 ## Response envelope
 
 Ship8 wraps every response in a `ResultDto` envelope:
@@ -186,6 +218,7 @@ if (is_callable([$inv, 'getInventoryDetails'])) {
 | `InboundPOApi`              | `createEECBondedDC`          | `POST /api/app/inboundPO/createEECBondedDC`                       |
 | `ReceivingApi`              | `create`                     | `POST /api/app/receiving/create`                                  |
 | `ReleaseSOApi`              | `create`                     | `POST /api/app/releaseSO/create`                                  |
+| `ReturnOrderApi`            | `create`                     | `POST /api/app/returnOrder/create`                                |
 | `InvoiceApi`                | `list`                       | `GET  /api/app/invoice/list`                                      |
 | `CompanyApi`                | `getBondedDCCompany`         | `GET  /api/app/company/getBondedDCCompany`                        |
 | `CustomerFreightQuoteApi`   | `getEstimatedShippingCost`   | `POST /api/app/customerFreightQuote/getEstimatedShippingCost`     |
@@ -208,6 +241,7 @@ lib/
 │   ├── InboundPOApi.php
 │   ├── ReceivingApi.php
 │   ├── ReleaseSOApi.php
+│   ├── ReturnOrderApi.php
 │   ├── InvoiceApi.php
 │   ├── CompanyApi.php
 │   └── CustomerFreightQuoteApi.php
@@ -236,9 +270,9 @@ The SDK provides complete implementation coverage of the Ship8 OpenAPI specifica
 
 | Metric | Coverage |
 |--------|----------|
-| API Endpoints | 14/14 (100%) |
-| Request/Response Models | 23/23 (100%) |
-| Total Implemented Models | 40 |
+| API Endpoints | 15/15 (100%) |
+| Request/Response Models | 27/27 (100%) |
+| Total Implemented Models | 44 |
 
 ### Implemented Resources
 
@@ -250,6 +284,7 @@ The SDK provides complete implementation coverage of the Ship8 OpenAPI specifica
 - **InboundPO** (2 endpoints) — Create inbound POs (standard & EEC bonded DC)
 - **Receiving** (1 endpoint) — Create receiving orders
 - **ReleaseSO** (1 endpoint) — Create release SO
+- **Return** (1 endpoint) — Create return orders
 - **Invoice** (1 endpoint) — List invoices
 - **CustomerFreightQuote** (1 endpoint) — Estimate shipping costs
 

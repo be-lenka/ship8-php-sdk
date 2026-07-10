@@ -71,6 +71,10 @@ namespace BeLenka\Ship8\Model;
  * @method self setIdentifierRequired(?int $v)
  * @method ?string getIdentifierRequiredText()
  * @method self setIdentifierRequiredText(?string $v)
+ * @method ?int getUltraLight()
+ * @method self setUltraLight(?int $v)
+ * @method ?string getUltraLightText()
+ * @method self setUltraLightText(?string $v)
  * @method ?\DateTimeInterface getCreatedDate()
  * @method self setCreatedDate(?\DateTimeInterface $v)
  * @method ?string getCreatedBy()
@@ -117,6 +121,8 @@ class ItemCreationOutDto extends AbstractModel
         'statusName' => 'string',
         'identifierRequired' => 'int',
         'identifierRequiredText' => 'string',
+        'ultraLight' => 'int',
+        'ultraLightText' => 'string',
         'createdDate' => '\\DateTime',
         'createdBy' => 'string',
         'lastUpdatedDate' => '\\DateTime',
@@ -143,6 +149,7 @@ class ItemCreationOutDto extends AbstractModel
         'productCost' => 'double',
         'status' => 'int32',
         'identifierRequired' => 'int32',
+        'ultraLight' => 'int32',
         'createdDate' => 'date-time',
         'lastUpdatedDate' => 'date-time',
     ];

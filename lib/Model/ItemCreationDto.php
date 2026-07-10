@@ -12,7 +12,7 @@ namespace BeLenka\Ship8\Model;
  * Single item entry inside ProductCreationDto. `changeType` is one of
  * `New`/`Change`. `productType` is one of `Standard`/`Assortment`/`Kit`.
  * `status` is one of `Pending`/`Active`/`Disabled`. `identifierRequired`
- * is one of `Yes`/`No`.
+ * and `ultraLight` are each one of `Yes`/`No`.
  *
  * @method ?string getChangeType()
  * @method self setChangeType(?string $v)
@@ -58,6 +58,8 @@ namespace BeLenka\Ship8\Model;
  * @method self setSupplierNo(?string $v)
  * @method ?string getIdentifierRequired()
  * @method self setIdentifierRequired(?string $v)
+ * @method ?string getUltraLight()
+ * @method self setUltraLight(?string $v)
  * @method ?int getCtnperPallet()
  * @method self setCtnperPallet(?int $v)
  */
@@ -73,6 +75,8 @@ class ItemCreationDto extends AbstractModel
     public const STATUS_DISABLED = 'Disabled';
     public const IDENTIFIER_REQUIRED_YES = 'Yes';
     public const IDENTIFIER_REQUIRED_NO = 'No';
+    public const ULTRA_LIGHT_YES = 'Yes';
+    public const ULTRA_LIGHT_NO = 'No';
 
     /** @var string */
     protected static $openAPIModelName = 'Products.Dtos.ItemCreationDto';
@@ -101,6 +105,7 @@ class ItemCreationDto extends AbstractModel
         'lotNo' => 'string',
         'supplierNo' => 'string',
         'identifierRequired' => 'string',
+        'ultraLight' => 'string',
         'ctnperPallet' => 'int',
     ];
 

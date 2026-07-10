@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-10
+
+### Added
+- `ReturnOrderApi::create()` — `POST /api/app/returnOrder/create` for logging
+  customer return orders.
+- `ReturnOrderCreationDto`, `ReturnOrderItemCreationDto`, `ReturnOrderOutDto`
+  and `ReturnOrderItemOutDto` models backing the return-order flow.
+- `ultraLight` field on `ItemCreationDto` (product-upsert request) and
+  `ultraLight` / `ultraLightText` fields on `ItemCreationOutDto` (response).
+
 ## [0.2.0] - 2026-05-25
 
 ### Added
@@ -23,5 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ResultDto` unwrapping in `AbstractApi::request()` — callers receive
   the inner `data` payload deserialised into the appropriate model.
 
-[Unreleased]: https://github.com/be-lenka/ship8-php-sdk/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/be-lenka/ship8-php-sdk/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/be-lenka/ship8-php-sdk/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/be-lenka/ship8-php-sdk/releases/tag/v0.2.0
