@@ -20,7 +20,7 @@ namespace BeLenka\Ship8;
  */
 class Configuration
 {
-    public const VERSION = '0.2.0';
+    public const VERSION = '0.3.0';
 
     public const BOOLEAN_FORMAT_INT = 'int';
     public const BOOLEAN_FORMAT_STRING = 'string';
@@ -98,7 +98,7 @@ class Configuration
      *
      * @var string
      */
-    protected $userAgent = 'BeLenka-Ship8-PHP/0.2.0';
+    protected $userAgent = 'BeLenka-Ship8-PHP/0.3.0';
 
     /**
      * Debug switch (default false)

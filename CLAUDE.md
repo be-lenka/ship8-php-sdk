@@ -4,15 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What is This?
 
-**Ship8 PHP SDK** — typed PHP client for the Ship8 fulfillment/3PL platform. Wraps 14 API endpoints across order, shipment, inbound PO, receiving, release, product, inventory, invoice, and freight quote operations. Handles JWT authentication, result envelope unwrapping, and model serialization.
+**Ship8 PHP SDK** — typed PHP client for the Ship8 fulfillment/3PL platform. Wraps 15 API endpoints across order, shipment, inbound PO, receiving, release, return, product, inventory, invoice, and freight quote operations. Handles JWT authentication, result envelope unwrapping, and model serialization.
 
 ## Folder Structure
 
 ```
 lib/
-├── Api/              10 API resource classes (OrderApi, ShipmentApi, etc.)
+├── Api/              11 API resource classes (OrderApi, ShipmentApi, etc.)
 │   └── AbstractApi   Base transport + ResultDto unwrap
-├── Model/            40 DTOs + enums (OrderCreationDto, ShipmentDto, etc.)
+├── Model/            44 DTOs + enums (OrderCreationDto, ShipmentDto, etc.)
 │   └── AbstractModel Property bag + ArrayAccess + JSON mapping
 ├── Auth.php          JWT token request/refresh handler
 ├── Configuration.php Host, credentials, debug settings
