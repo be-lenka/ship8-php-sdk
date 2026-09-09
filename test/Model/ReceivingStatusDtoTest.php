@@ -23,8 +23,7 @@ class ReceivingStatusDtoTest extends TestCase
 
     public function testDeserializeCoercesQuantitiesToFloat(): void
     {
-        // note the wire values are JSON ints, not floats — Ship8 sends whole
-        // numbers unquoted and the spec declares them number/double
+        // wire values are JSON ints, not floats
         $dto = $this->deserialize([
             'receivingOrder' => 'RO-1001',
             'customerCode' => 'ACME',
@@ -51,7 +50,7 @@ class ReceivingStatusDtoTest extends TestCase
         self::assertIsFloat($item->getVarianceQty());
         self::assertSame(10.0, $item->getExpectedQty());
         self::assertSame(7.0, $item->getReceivedQty());
-        // Variance = expected - received; positive means short received
+        // positive variance means short received
         self::assertSame(3.0, $item->getVarianceQty());
     }
 
@@ -88,9 +87,7 @@ class ReceivingStatusDtoTest extends TestCase
 
         $payload = json_decode(json_encode(ObjectSerializer::sanitizeForSerialization($dto)), true);
 
-        // Receiving/InboundPO/ReleaseSO use itemUPC; ReturnOrders uses itemUpc.
-        // The wire key IS the property name (attributeMap is identity-derived),
-        // so a casing drift here would silently drop the field.
+        // the wire key is the property name, so casing drift drops the field
         self::assertArrayHasKey('itemUPC', $payload['items'][0]);
         self::assertArrayNotHasKey('itemUpc', $payload['items'][0]);
         self::assertSame('0123456789012', $payload['items'][0]['itemUPC']);
@@ -103,8 +100,7 @@ class ReceivingStatusDtoTest extends TestCase
     {
         $dto = new ReceivingStatusDto();
 
-        // hasProperty() is the CLAUDE.md-sanctioned check — method_exists()
-        // cannot see accessors dispatched through AbstractModel::__call()
+        // use hasProperty(), not method_exists() — see AbstractModel::__call()
         self::assertTrue($dto->hasProperty('items'));
         self::assertTrue($dto->hasProperty('carrierSCAC'));
         self::assertTrue($dto->hasProperty('receivingStatus'));
@@ -116,8 +112,7 @@ class ReceivingStatusDtoTest extends TestCase
     }
 
     /**
-     * The three wire shapes `items` can arrive in. Absent and explicit-null
-     * both yield null, so consumers must write `getItems() ?? []`.
+     * The three wire shapes `items` can arrive in.
      *
      * @dataProvider itemsWireShapeProvider
      *
@@ -143,8 +138,7 @@ class ReceivingStatusDtoTest extends TestCase
 
     public function testUnsetPropertiesReadAsNull(): void
     {
-        // AbstractModel seeds every property to null, so a caller can always
-        // observe null even for spec-non-nullable fields
+        // AbstractModel seeds every property to null
         $dto = new ReceivingStatusDto();
 
         self::assertNull($dto->getReceivingOrder());

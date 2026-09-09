@@ -62,9 +62,7 @@ class ProductApiTest extends TestCase
     }
 
     /**
-     * Backward-compatibility guard: the filters are optional additions, so a
-     * no-argument call must produce a byte-identical request to the one the
-     * SDK sent before they existed — in particular, no '?' at all.
+     * Backward-compatibility guard: a no-argument call must send no query string.
      */
     public function testGetInventoryWithoutFiltersSendsNoQueryString(): void
     {
@@ -108,7 +106,7 @@ class ProductApiTest extends TestCase
         $container = [];
         $this->apiFor($this->inventoryPayload(), $container)->getInventory(null, '0123456789012');
 
-        // a null $itemNo is stripped, leaving UPC as the only parameter
+        // null $itemNo is stripped
         self::assertSame(
             'https://sandbox.ship8.com/api/app/product/getInventory?UPC=0123456789012',
             (string) $container[0]['request']->getUri()
@@ -120,7 +118,7 @@ class ProductApiTest extends TestCase
         $container = [];
         $this->apiFor($this->inventoryPayload(), $container)->getInventory('SKU-1', '0123456789012');
 
-        // key order follows insertion order, which http_build_query preserves
+        // key order follows insertion order
         self::assertSame(
             'https://sandbox.ship8.com/api/app/product/getInventory?ItemNo=SKU-1&UPC=0123456789012',
             (string) $container[0]['request']->getUri()

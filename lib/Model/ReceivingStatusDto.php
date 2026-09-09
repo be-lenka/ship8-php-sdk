@@ -9,19 +9,9 @@
 namespace BeLenka\Ship8\Model;
 
 /**
- * Response payload from GET /api/app/receiving/get — receiving order status.
+ * Response payload from GET /api/app/receiving/get.
  *
- * This is a deliberately narrower shape than {@see ReceivingOutDto}, which is
- * what POST /api/app/receiving/create returns. It carries the header
- * identifiers plus per line expected/received/variance quantities, and none of
- * the ship-to block, supplier, seal or cross-docking fields.
- *
- * `receivingStatus` is one of Pending / Open / Receiving / Received /
- * Cancelled. Upstream declares it a free-form string rather than an enum, so
- * it is not modelled as constants.
- *
- * `getItems()` is null when the payload omits the key, so read it as
- * `$status->getItems() ?? []` rather than iterating the raw return value.
+ * Narrower shape than ReceivingOutDto, which create() returns.
  *
  * @method ?string getReceivingOrder()
  * @method self setReceivingOrder(?string $v)

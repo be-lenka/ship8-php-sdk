@@ -9,21 +9,10 @@
 namespace BeLenka\Ship8\Model;
 
 /**
- * Line level receiving status, nested inside the ReceivingStatusDto returned
- * by GET /api/app/receiving/get.
+ * Line item of ReceivingStatusDto (GET /api/app/receiving/get).
  *
- * Variance carries the short/over receipt signal. Its direction is easy to
- * read backwards, so here it is verbatim from the Ship8 spec:
- *
- *   Variance = ExpectedQty - ReceivedQty. Positive means short received,
- *   negative means over received.
- *
- * So `varianceQty > 0` means the warehouse received *fewer* units than the
- * receiving order expected, and `varianceQty < 0` means it received more.
- * Zero means the line reconciled exactly.
- *
- * `itemStatus` is one of Open / Received / Cancelled. Upstream declares it a
- * free-form string rather than an enum, so it is not modelled as constants.
+ * Variance = expectedQty - receivedQty; positive is short received, negative
+ * is over received.
  *
  * @method ?string getItemNo()
  * @method self setItemNo(?string $v)

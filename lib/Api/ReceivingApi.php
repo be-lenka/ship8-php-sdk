@@ -36,19 +36,16 @@ class ReceivingApi extends AbstractApi
     }
 
     /**
-     * GET /api/app/receiving/get — receiving order status.
+     * GET /api/app/receiving/get
      *
-     * Returns ReceivingStatusDto (header identifiers + line level
-     * expected/received/variance), NOT the wider ReceivingOutDto that create()
-     * returns.
+     * Returns the receiving status matching the customerCode + receivingOrder pair.
      *
      * @throws ApiException
      */
     public function getStatus(string $customerCode, string $receivingOrder): ReceivingStatusDto
     {
-        // Query keys are camelCase per resources/swagger.json — same as /order/get.
-        // Note this differs from /shipment/get and /product/getInventory, which
-        // use PascalCase.
+        // Query keys are camelCase per resources/swagger.json. Note this differs from
+        // /shipment/get and /product/getInventory, which use PascalCase.
         return $this->request(
             'GET',
             '/api/app/receiving/get',

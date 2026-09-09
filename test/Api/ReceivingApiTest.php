@@ -85,7 +85,7 @@ class ReceivingApiTest extends TestCase
         self::assertSame('Receiving', $out->getReceivingStatus());
         self::assertSame('CONT-7', $out->getContainerNo());
         self::assertSame('BOL-42', $out->getBolNo());
-        // all-caps property: pins the magic-accessor derivation on the header too
+        // all-caps property
         self::assertSame('FDEG', $out->getCarrierSCAC());
         self::assertInstanceOf(\DateTimeInterface::class, $out->getShipDate());
         self::assertInstanceOf(\DateTimeInterface::class, $out->getEstimatedDeliveryDate());
@@ -96,11 +96,11 @@ class ReceivingApiTest extends TestCase
         $short = $out->getItems()[0];
         self::assertInstanceOf(ReceivingItemStatusDto::class, $short);
         self::assertSame('SKU-1', $short->getItemNo());
-        // the point of this test: itemUPC (not itemUpc) round-trips through __call
+        // itemUPC, not itemUpc
         self::assertSame('0123456789012', $short->getItemUPC());
         self::assertSame(10.0, $short->getExpectedQty());
         self::assertSame(7.0, $short->getReceivedQty());
-        // Variance = expected - received; positive means short received
+        // positive variance means short received
         self::assertSame(3.0, $short->getVarianceQty());
         self::assertSame('Open', $short->getItemStatus());
 
@@ -146,7 +146,7 @@ class ReceivingApiTest extends TestCase
         $out = $this->apiFor($payload, $container)->getStatus('ACME', 'RO-2002');
 
         self::assertSame('Pending', $out->getReceivingStatus());
-        // absent `items` yields null, NOT [] — consumers must write `?? []`
+        // absent items yields null, not []
         self::assertNull($out->getItems());
         self::assertNull($out->getShipDate());
     }
