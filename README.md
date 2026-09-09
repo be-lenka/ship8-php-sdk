@@ -155,6 +155,86 @@ try {
 }
 ```
 
+## Checking receiving progress
+
+`ReceivingApi::getStatus()` returns a `ReceivingStatusDto` — the receiving
+order header plus per-line expected/received quantities. This is a narrower
+shape than the `ReceivingOutDto` that `create()` returns.
+
+Two things to know before reading the numbers:
+
+- **`getItems()` can be `null`**, not `[]`, when the payload omits the key.
+  Always read it as `getItems() ?? []`.
+- **`varianceQty = expectedQty - receivedQty`.** A **positive** variance means
+  the line was **short received**; a **negative** variance means it was **over
+  received**. Zero means it reconciled exactly.
+
+```php
+use BeLenka\Ship8\Api\ReceivingApi;
+
+$receivingApi = new ReceivingApi(null, $config);
+
+try {
+    $status = $receivingApi->getStatus('ACME', 'RO-1001');
+
+    printf("%s — %s\n", $status->getReceivingOrder(), $status->getReceivingStatus());
+
+    foreach ($status->getItems() ?? [] as $item) {
+        $variance = $item->getVarianceQty() ?? 0.0;
+
+        if ($variance > 0) {
+            $note = sprintf('SHORT by %.2f', $variance);
+        } elseif ($variance < 0) {
+            $note = sprintf('OVER by %.2f', abs($variance));
+        } else {
+            $note = 'OK';
+        }
+
+        printf(
+            "  %-12s UPC %-14s expected %6.2f  received %6.2f  %s\n",
+            $item->getItemNo(),
+            $item->getItemUPC(),
+            $item->getExpectedQty() ?? 0.0,
+            $item->getReceivedQty() ?? 0.0,
+            $note
+        );
+    }
+} catch (\BeLenka\Ship8\ApiException $e) {
+    fwrite(STDERR, sprintf("Ship8 error [%d]: %s\n", $e->getCode(), $e->getMessage()));
+}
+```
+
+`receivingStatus` is one of `Pending` / `Open` / `Receiving` / `Received` /
+`Cancelled`, and each line's `itemStatus` is one of `Open` / `Received` /
+`Cancelled`. Both are free-form strings upstream, so the SDK does not model
+them as enums.
+
+## Querying inventory
+
+`ProductApi::getInventory()` takes two optional filters. With no arguments it
+returns the full snapshot exactly as before; passing a SKU and/or UPC lets
+Ship8 narrow the result server side instead of you pulling the whole catalogue
+to inspect one item:
+
+```php
+use BeLenka\Ship8\Api\ProductApi;
+
+$productApi = new ProductApi(null, $config);
+
+$all      = $productApi->getInventory();                          // full snapshot
+$oneSku   = $productApi->getInventory('SKU-1');                   // ?ItemNo=SKU-1
+$oneUpc   = $productApi->getInventory(null, '0123456789012');     // ?UPC=0123456789012
+$narrowed = $productApi->getInventory('SKU-1', '0123456789012');  // both
+
+foreach ($oneSku->getInventoryDetails() ?? [] as $row) {
+    printf("%s: %d on hand, %d available\n",
+        $row->getItemNo(), $row->getOnHandQty(), $row->getTotalAvailableQty());
+}
+```
+
+Pass `null` to omit a filter. An empty string is **not** the same as `null` —
+it is sent as `ItemNo=`, which Ship8 may read as "match nothing".
+
 ## Response envelope
 
 Ship8 wraps every response in a `ResultDto` envelope:
@@ -217,6 +297,7 @@ if (is_callable([$inv, 'getInventoryDetails'])) {
 | `InboundPOApi`              | `create`                     | `POST /api/app/inboundPO/create`                                  |
 | `InboundPOApi`              | `createEECBondedDC`          | `POST /api/app/inboundPO/createEECBondedDC`                       |
 | `ReceivingApi`              | `create`                     | `POST /api/app/receiving/create`                                  |
+| `ReceivingApi`              | `getStatus`                  | `GET  /api/app/receiving/get`                                     |
 | `ReleaseSOApi`              | `create`                     | `POST /api/app/releaseSO/create`                                  |
 | `ReturnOrderApi`            | `create`                     | `POST /api/app/returnOrder/create`                                |
 | `InvoiceApi`                | `list`                       | `GET  /api/app/invoice/list`                                      |
@@ -270,9 +351,9 @@ The SDK provides complete implementation coverage of the Ship8 OpenAPI specifica
 
 | Metric | Coverage |
 |--------|----------|
-| API Endpoints | 15/15 (100%) |
-| Request/Response Models | 27/27 (100%) |
-| Total Implemented Models | 44 |
+| API Endpoints | 16/16 (100%) |
+| Request/Response Models | 29/29 (100%) |
+| Total Implemented Models | 46 |
 
 ### Implemented Resources
 
@@ -280,9 +361,9 @@ The SDK provides complete implementation coverage of the Ship8 OpenAPI specifica
 - **Company** (1 endpoint) — Bonded DC company info
 - **Order** (2 endpoints) — Create & retrieve orders
 - **Shipment** (1 endpoint) — Retrieve shipment details
-- **Product** (2 endpoints) — Upsert products & query inventory
+- **Product** (2 endpoints) — Upsert products & query inventory (optionally filtered by SKU/UPC)
 - **InboundPO** (2 endpoints) — Create inbound POs (standard & EEC bonded DC)
-- **Receiving** (1 endpoint) — Create receiving orders
+- **Receiving** (2 endpoints) — Create receiving orders & query receiving status
 - **ReleaseSO** (1 endpoint) — Create release SO
 - **Return** (1 endpoint) — Create return orders
 - **Invoice** (1 endpoint) — List invoices

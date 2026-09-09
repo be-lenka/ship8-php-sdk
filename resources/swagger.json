@@ -649,6 +649,24 @@
           "Product"
         ],
         "summary": "Get Product Inventory List",
+        "parameters": [
+          {
+            "name": "ItemNo",
+            "in": "query",
+            "description": "Product SKU. Optional. If provided, only the inventory of this item is returned.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "UPC",
+            "in": "query",
+            "description": "UPC. Optional. If provided, only the inventory of this item is returned.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -801,6 +819,83 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ResultDto[Receivings.Dtos.ReceivingOutDto]"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "JwtBearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/app/receiving/get": {
+      "get": {
+        "tags": [
+          "Receiving"
+        ],
+        "summary": "Get Receiving Order Status",
+        "parameters": [
+          {
+            "name": "customerCode",
+            "in": "query",
+            "description": "customerCode",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "receivingOrder",
+            "in": "query",
+            "description": "receivingOrder",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDto[Receivings.Dtos.ReceivingStatusDto]"
                 }
               }
             }
@@ -3113,6 +3208,43 @@
         "additionalProperties": false,
         "description": "Receiving Item"
       },
+      "Receivings.Dtos.ReceivingItemStatusDto": {
+        "type": "object",
+        "properties": {
+          "itemNo": {
+            "type": "string",
+            "description": "Item No.",
+            "nullable": true
+          },
+          "itemUPC": {
+            "type": "string",
+            "description": "Item UPC",
+            "nullable": true
+          },
+          "expectedQty": {
+            "type": "number",
+            "description": "Expected quantity.",
+            "format": "double"
+          },
+          "receivedQty": {
+            "type": "number",
+            "description": "Actual received quantity.",
+            "format": "double"
+          },
+          "varianceQty": {
+            "type": "number",
+            "description": "Variance = ExpectedQty - ReceivedQty. Positive means short received, negative means over received.",
+            "format": "double"
+          },
+          "itemStatus": {
+            "type": "string",
+            "description": "Line status: Open / Received / Cancelled",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Line level receiving status of a receiving order."
+      },
       "Receivings.Dtos.ReceivingLineOutDto": {
         "type": "object",
         "properties": {
@@ -3286,6 +3418,62 @@
           }
         },
         "additionalProperties": false
+      },
+      "Receivings.Dtos.ReceivingStatusDto": {
+        "type": "object",
+        "properties": {
+          "receivingOrder": {
+            "type": "string",
+            "description": "Receiving Order No.",
+            "nullable": true
+          },
+          "customerCode": {
+            "type": "string",
+            "description": "Customer Code",
+            "nullable": true
+          },
+          "containerNo": {
+            "type": "string",
+            "description": "Container No.",
+            "nullable": true
+          },
+          "carrierSCAC": {
+            "type": "string",
+            "description": "Carrier SCAC",
+            "nullable": true
+          },
+          "bolNo": {
+            "type": "string",
+            "description": "BOL No.",
+            "nullable": true
+          },
+          "shipDate": {
+            "type": "string",
+            "description": "Ship Date",
+            "format": "date-time"
+          },
+          "estimatedDeliveryDate": {
+            "type": "string",
+            "description": "Estimated Delivery Date",
+            "format": "date-time",
+            "nullable": true
+          },
+          "receivingStatus": {
+            "type": "string",
+            "description": "Order status: Pending / Open / Receiving / Received / Cancelled",
+            "nullable": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Receivings.Dtos.ReceivingItemStatusDto"
+            },
+            "description": "Line level receiving detail.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Receiving order status returned to the customer."
       },
       "ReleaseSOs.API.ReleaseSOCreationDto": {
         "required": [
@@ -3848,6 +4036,36 @@
         "additionalProperties": false,
         "description": "Result Dto"
       },
+      "ResultDto[Receivings.Dtos.ReceivingStatusDto]": {
+        "type": "object",
+        "properties": {
+          "successful": {
+            "type": "boolean",
+            "description": "Indicate business handle result (Not http result)"
+          },
+          "code": {
+            "type": "string",
+            "description": "Result Code",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Result Message",
+            "nullable": true
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Receivings.Dtos.ReceivingStatusDto"
+              }
+            ],
+            "description": "Result Data",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Result Dto"
+      },
       "ResultDto[ReleaseSOs.API.ReleaseSOOutDto]": {
         "type": "object",
         "properties": {
@@ -4048,6 +4266,11 @@
             "type": "string",
             "description": "Return Order Id",
             "format": "uuid"
+          },
+          "webhookReturnOrderID": {
+            "type": "string",
+            "description": "Webhook Return Order ID",
+            "nullable": true
           },
           "customerCode": {
             "type": "string",
