@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `ReceivingApi::getStatus()` — `GET /api/app/receiving/get` for reading
+  receiving-order progress and short/over-receipt variance without opening the
+  Ship8 portal.
+- `ReceivingStatusDto` and `ReceivingItemStatusDto` models backing the
+  receiving-status lookup. Note `varianceQty = expectedQty - receivedQty`, so a
+  positive value means short received and a negative value means over received.
+- Optional `$itemNo` and `$upc` filters on `ProductApi::getInventory()`
+  (`ItemNo` / `UPC` query parameters), letting Ship8 narrow the inventory
+  snapshot server side. Backward compatible: calling `getInventory()` with no
+  arguments sends the same request as before and returns the full snapshot.
+- `webhookReturnOrderID` field on `ReturnOrderOutDto` (return-order response).
+
 ## [0.3.0] - 2026-07-10
 
 ### Added

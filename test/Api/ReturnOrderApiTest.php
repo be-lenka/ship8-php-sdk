@@ -42,6 +42,7 @@ class ReturnOrderApiTest extends TestCase
             'message' => 'OK',
             'data' => [
                 'id' => '2a3b4c5d-1111-2222-3333-444455556666',
+                'webhookReturnOrderID' => 'whk-123',
                 'customerCode' => 'ACME',
                 'manual' => 0,
                 'returnOrderNo' => 'RMA-001',
@@ -81,6 +82,7 @@ class ReturnOrderApiTest extends TestCase
 
         self::assertInstanceOf(ReturnOrderOutDto::class, $out);
         self::assertSame('RMA-001', $out->getReturnOrderNo());
+        self::assertSame('whk-123', $out->getWebhookReturnOrderID());
         self::assertSame('Received', $out->getStatus());
         self::assertSame('DC1', $out->getReturnLocation());
         self::assertInstanceOf(\DateTimeInterface::class, $out->getFeedDate());

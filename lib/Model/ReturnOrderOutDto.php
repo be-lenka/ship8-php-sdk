@@ -15,6 +15,8 @@ namespace BeLenka\Ship8\Model;
  *
  * @method ?string getId()
  * @method self setId(?string $v)
+ * @method ?string getWebhookReturnOrderID()
+ * @method self setWebhookReturnOrderID(?string $v)
  * @method ?string getCustomerCode()
  * @method self setCustomerCode(?string $v)
  * @method ?string getSalesOrderNo()
@@ -58,6 +60,7 @@ class ReturnOrderOutDto extends AbstractModel
     /** @var array<string, string> */
     protected static $openAPITypes = [
         'id' => 'string',
+        'webhookReturnOrderID' => 'string',
         'customerCode' => 'string',
         'salesOrderNo' => 'string',
         'manual' => 'int',

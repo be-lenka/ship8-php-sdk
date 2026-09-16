@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What is This?
 
-**Ship8 PHP SDK** — typed PHP client for the Ship8 fulfillment/3PL platform. Wraps 15 API endpoints across order, shipment, inbound PO, receiving, release, return, product, inventory, invoice, and freight quote operations. Handles JWT authentication, result envelope unwrapping, and model serialization.
+**Ship8 PHP SDK** — typed PHP client for the Ship8 fulfillment/3PL platform. Wraps 16 API endpoints across order, shipment, inbound PO, receiving, release, return, product, inventory, invoice, and freight quote operations. Handles JWT authentication, result envelope unwrapping, and model serialization.
 
 ## Folder Structure
 
@@ -53,7 +53,9 @@ composer install
 ## Key Notes
 
 - Ship8 wraps all responses in `ResultDto { successful, code, message, data }` — `AbstractApi` unwraps to just `data`
-- Order query params are camelCase; Shipment query params are PascalCase (documented in code)
+- Query-param casing is per-endpoint, not a two-way split — mirror `resources/swagger.json` exactly (each API method carries an inline comment saying which it uses):
+  - camelCase: `/order/get` (`customerCode`, `orderNo`), `/receiving/get` (`customerCode`, `receivingOrder`)
+  - PascalCase: `/shipment/get` (`CustomerCode`, `CustomerOrderNo`), `/invoice/list` (`CustomerCode`, `InvoiceDateStart`, ...), `/company/getBondedDCCompany` (`CompanyCode`), `/product/getInventory` (`ItemNo`, `UPC` — all-caps)
 - Adding a new endpoint is a one-method change in the corresponding API class
 - Credentials should never be hardcoded; pass via `Configuration`
 
