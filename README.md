@@ -247,6 +247,20 @@ Ship8 wraps every response in a `ResultDto` envelope:
 deserialized into the appropriate model. When `successful` is `false`, an
 `ApiException` is raised carrying the server's `code` and `message`.
 
+`getCode()` is the HTTP status. The Ship8 business code and message are on
+`getErrorCode()` / `getErrorMessage()`, read from either error shape (the 4xx
+`{"error": {...}}` body or the `successful: false` envelope). Ship8's "already
+exists" rejection (`500001`) is raised as `AlreadyExistsException`, a subclass
+of `ApiException`, so it can be caught by type:
+
+```php
+try {
+    $api->upsert($payload);                     // items with changeType=New
+} catch (\BeLenka\Ship8\AlreadyExistsException $e) {
+    // the SKU is already at Ship8 — resend as changeType=Change
+}
+```
+
 ## Accessing model properties (do not use `method_exists`)
 
 Model getters and setters are dispatched through `AbstractModel::__call()` —

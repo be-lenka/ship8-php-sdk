@@ -81,4 +81,53 @@ class ApiException extends Exception
     {
         return $this->responseObject;
     }
+
+    /**
+     * Ship8 business error code from the response body, e.g. "500001".
+     *
+     * Reads both error shapes Ship8 returns: the 4xx `{"error": {"code", "message"}}`
+     * body and the 2xx ResultDto `{"successful": false, "code", "message"}` envelope.
+     * `getCode()` stays the HTTP status.
+     */
+    public function getErrorCode(): ?string
+    {
+        $error = $this->decodeError();
+        return isset($error['code']) && $error['code'] !== '' ? (string) $error['code'] : null;
+    }
+
+    /**
+     * Ship8 business error message from the response body (same shapes as getErrorCode()).
+     */
+    public function getErrorMessage(): ?string
+    {
+        $error = $this->decodeError();
+        return isset($error['message']) ? (string) $error['message'] : null;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function decodeError(): ?array
+    {
+        $body = $this->responseBody;
+        if ($body instanceof \stdClass) {
+            $body = json_encode($body);
+        }
+        if (!is_string($body) || $body === '') {
+            return null;
+        }
+
+        $decoded = json_decode($body, true);
+        if (!is_array($decoded)) {
+            return null;
+        }
+        if (isset($decoded['error']) && is_array($decoded['error'])) {
+            return $decoded['error'];
+        }
+        if (array_key_exists('successful', $decoded)) {
+            return $decoded;
+        }
+
+        return null;
+    }
 }
