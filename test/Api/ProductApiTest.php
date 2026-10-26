@@ -2,11 +2,14 @@
 
 namespace BeLenka\Ship8\Test\Api;
 
+use BeLenka\Ship8\AlreadyExistsException;
 use BeLenka\Ship8\Api\ProductApi;
 use BeLenka\Ship8\ApiException;
 use BeLenka\Ship8\Configuration;
 use BeLenka\Ship8\Model\InventoryDetailDto;
 use BeLenka\Ship8\Model\InventoryDto;
+use BeLenka\Ship8\Model\ItemCreationDto;
+use BeLenka\Ship8\Model\ProductCreationDto;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -151,5 +154,97 @@ class ProductApiTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionMessageMatches('/INVENTORY_UNAVAILABLE/');
         $api->getInventory('SKU-1');
+    }
+
+    private function upsertFailure(Response $response): ApiException
+    {
+        $http = new Client(['handler' => HandlerStack::create(new MockHandler([$response]))]);
+        $config = (new Configuration())
+            ->setHost('https://sandbox.ship8.com')
+            ->setAccessToken('jwt');
+
+        $item = (new ItemCreationDto())
+            ->setChangeType(ItemCreationDto::CHANGE_TYPE_NEW)
+            ->setProductSKU('SKU-1');
+        $payload = (new ProductCreationDto())
+            ->setCustomerCode('ACME')
+            ->setItems([$item]);
+
+        try {
+            (new ProductApi($http, $config))->upsert($payload);
+        } catch (ApiException $e) {
+            return $e;
+        }
+        self::fail('upsert() did not throw');
+    }
+
+    public function testUpsertAlreadyExists403RaisesAlreadyExistsException(): void
+    {
+        $e = $this->upsertFailure(new Response(403, ['Content-Type' => 'application/json'], json_encode([
+            'error' => [
+                'code' => '500001',
+                'message' => "The product SKU 'SKU-1' already exists.",
+                'details' => null,
+                'data' => new \stdClass(),
+                'validationErrors' => null,
+            ],
+        ])));
+
+        self::assertInstanceOf(AlreadyExistsException::class, $e);
+        self::assertSame(403, $e->getCode());
+        self::assertSame('500001', $e->getErrorCode());
+        self::assertSame("The product SKU 'SKU-1' already exists.", $e->getErrorMessage());
+    }
+
+    public function testUpsertAlreadyExistsEnvelopeRaisesAlreadyExistsException(): void
+    {
+        $e = $this->upsertFailure(new Response(200, ['Content-Type' => 'application/json'], json_encode([
+            'successful' => false,
+            'code' => '500001',
+            'message' => "The product SKU 'SKU-1' already exists.",
+        ])));
+
+        self::assertInstanceOf(AlreadyExistsException::class, $e);
+        self::assertSame(200, $e->getCode());
+        self::assertSame('500001', $e->getErrorCode());
+        // Message format unchanged, so existing "[500001]" checks keep matching.
+        self::assertStringStartsWith('[500001] ', $e->getMessage());
+    }
+
+    public function testUpsertValidationErrorStaysApiException(): void
+    {
+        $e = $this->upsertFailure(new Response(400, ['Content-Type' => 'application/json'], json_encode([
+            'error' => [
+                'code' => null,
+                'message' => 'Your request is not valid!',
+                'details' => "The following errors were detected during validation.\r\n - Keep two decimals.\r\n",
+                'validationErrors' => [['message' => 'Keep two decimals.', 'members' => ['items[0].Weight']]],
+            ],
+        ])));
+
+        self::assertNotInstanceOf(AlreadyExistsException::class, $e);
+        self::assertSame(400, $e->getCode());
+        self::assertNull($e->getErrorCode());
+        self::assertSame('Your request is not valid!', $e->getErrorMessage());
+    }
+
+    public function testUpsert500001WithOtherMessageStaysApiException(): void
+    {
+        $e = $this->upsertFailure(new Response(403, ['Content-Type' => 'application/json'], json_encode([
+            'error' => ['code' => '500001', 'message' => 'Customer is disabled.'],
+        ])));
+
+        self::assertNotInstanceOf(AlreadyExistsException::class, $e);
+        self::assertSame('500001', $e->getErrorCode());
+    }
+
+    public function testUpsertNonJsonErrorBodyHasNoErrorCode(): void
+    {
+        $e = $this->upsertFailure(new Response(502, ['Content-Type' => 'text/html'], '<html>Bad Gateway</html>'));
+
+        self::assertNotInstanceOf(AlreadyExistsException::class, $e);
+        self::assertSame(502, $e->getCode());
+        self::assertNull($e->getErrorCode());
+        self::assertNull($e->getErrorMessage());
     }
 }

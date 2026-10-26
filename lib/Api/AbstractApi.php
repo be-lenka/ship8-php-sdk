@@ -8,6 +8,7 @@
 
 namespace BeLenka\Ship8\Api;
 
+use BeLenka\Ship8\AlreadyExistsException;
 use BeLenka\Ship8\ApiException;
 use BeLenka\Ship8\Configuration;
 use BeLenka\Ship8\HeaderSelector;
@@ -97,7 +98,7 @@ abstract class AbstractApi
         try {
             $response = $this->client->send($request, $this->createHttpClientOption());
         } catch (RequestException $e) {
-            throw new ApiException(
+            throw $this->createApiException(
                 sprintf('[%d] %s', (int) $e->getCode(), $e->getMessage()),
                 (int) $e->getCode(),
                 $e->getResponse() ? $e->getResponse()->getHeaders() : null,
@@ -113,6 +114,19 @@ abstract class AbstractApi
         }
 
         return $this->deserializeResponse($request, $response, $returnType, $unwrapResult);
+    }
+
+    /**
+     * @param array<string, string[]>|null $headers
+     */
+    protected function createApiException(string $message, int $code, ?array $headers, ?string $body): ApiException
+    {
+        $e = new ApiException($message, $code, $headers, $body);
+        if (AlreadyExistsException::matches($e)) {
+            return new AlreadyExistsException($message, $code, $headers, $body);
+        }
+
+        return $e;
     }
 
     /**
@@ -175,7 +189,7 @@ abstract class AbstractApi
         $statusCode = $response->getStatusCode();
 
         if ($statusCode < 200 || $statusCode > 299) {
-            throw new ApiException(
+            throw $this->createApiException(
                 sprintf('[%d] Error connecting to the API (%s)', $statusCode, (string) $request->getUri()),
                 $statusCode,
                 $response->getHeaders(),
@@ -211,7 +225,7 @@ abstract class AbstractApi
             if ($decoded->successful !== true) {
                 $code = isset($decoded->code) ? (string) $decoded->code : '';
                 $message = isset($decoded->message) ? (string) $decoded->message : 'Ship8 returned a business error.';
-                throw new ApiException(
+                throw $this->createApiException(
                     sprintf('[%s] %s', $code, $message),
                     $statusCode,
                     $response->getHeaders(),
